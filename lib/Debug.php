@@ -14,6 +14,7 @@ use DateTime;
 class Debug
 {
     /**
+     * Alternative to var_dump. It <pre> the result or it shows the result in the console of javascript.
      * @param $value
      * @param bool $console true if you want to return the values in the javascript-console.
      * @see https://stackoverflow.com/questions/10116063/making-php-var-dump-values-display-one-line-per-value
