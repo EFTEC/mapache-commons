@@ -20,7 +20,6 @@ It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is
   * [Version list](#version-list)
   * [License](#license)
 
-<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
 
 ## Goals
