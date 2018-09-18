@@ -1,0 +1,27 @@
+{
+    "name": "eftec/mapache-commons",
+    "description": "It's a set of useful functions for PHP. The name is a pun.",
+    "version": "1.0",
+    "type": "library",
+    "keywords": [
+        "collection",
+        "php",
+        "debug",
+        "text"
+    ],
+    "homepage": "https://github.com/EFTEC/mapache-commons",
+    "authors": [
+        {
+            "name": "Jorge Castro Castillo",
+            "homepage": "https://github.com/EFTEC/mapache-commons"
+        }
+    ],
+    "minimum-stability": "beta",
+    "license": "Apache-2.0",
+    "autoload": {
+      "psr-4": {
+        "mapache_commons\\": "lib/"
+      }
+    }
+}
+
