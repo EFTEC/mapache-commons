@@ -1,6 +1,28 @@
 # Mapache Commons
 It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is "raccoon")
 
+- [Mapache Commons](#mapache-commons)
+  * [Goals](#goals)
+  * [Families](#families)
+  * [Collection](#collection)
+    + [isAssoc($array)](#isassoc--array-)
+    + [first($array)](#first--array-)
+    + [firstKey($array)](#firstkey--array-)
+    + [arrayKeyLower($arr)](#arraykeylower--arr-)
+    + [arrayKeyUpper($arr)](#arraykeyupper--arr-)
+    + [generateTable($array,$css=true)](#generatetable--array--css-true-)
+  * [Debug](#debug)
+    + [var_dump($value,$console=false)](#var-dump--value--console-false-)
+    + [WriteLog($logFile,$txt)](#writelog--logfile--txt-)
+  * [Text](#text)
+    + [isUpper($str)](#isupper--str-)
+    + [isLower($str)](#islower--str-)
+  * [Version list](#version-list)
+  * [License](#license)
+
+<small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
+
+
 ## Goals
 
 It's a set of useful function with the next requirements:
@@ -13,6 +35,32 @@ It's a set of useful function with the next requirements:
 * Collection
 * Text
 * Debug
+
+## Collection
+
+### isAssoc($array)
+
+### first($array)
+
+### firstKey($array)
+
+### arrayKeyLower($arr)
+
+### arrayKeyUpper($arr)
+
+### generateTable($array,$css=true)
+
+## Debug
+
+### var_dump($value,$console=false)
+
+### WriteLog($logFile,$txt)
+
+## Text
+
+### isUpper($str)
+
+### isLower($str)
 
 ## Version list
 
