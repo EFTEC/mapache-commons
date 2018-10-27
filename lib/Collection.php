@@ -5,7 +5,7 @@ namespace mapache_commons;
 /**
  * Class Collection
  * @package mapache_commons
- * @version 1.0 2018-09-18
+ * @version 1.2 2018-oct-27
  * @copyright Jorge Castro Castillo
  * @license Apache-2.0
  * @see https://github.com/EFTEC/mapache-commons
@@ -43,7 +43,7 @@ class Collection
     }
 
     /**
-     * Change the case of all the keys to lowercase
+     * Change the case of the key to lowercase
      * @param $arr
      * @return array
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
@@ -58,7 +58,7 @@ class Collection
         },array_change_key_case($arr,CASE_LOWER));
     }
     /**
-     * Change the case of all the keys to lowercase
+     * Change the case of the key to lowercase
      * @param $arr
      * @return array
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
@@ -74,7 +74,7 @@ class Collection
     }
 
     /**
-     * Generate a html table from an array
+     * Generate a table from an array
      * @param array|null $array
      * @param string|bool $css if true then it uses the build in style. If false then it doesn't use style. If string then it uses as class
      * @return string
@@ -124,7 +124,12 @@ class Collection
         foreach( $array as $key=>$value){
             $html .= '<tr >';
             foreach($value as $key2=>$value2){
-                $html .= '<td >' . htmlspecialchars($value2) . '</td>';
+                if (is_array($value2)) {
+                    $html .= '<td >' . self::generateTable($value2). '</td>';
+                } else {
+                    $html .= '<td >' . htmlspecialchars($value2) . '</td>';
+                }
+
             }
             $html .= '</tr>';
         }

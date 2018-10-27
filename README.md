@@ -72,6 +72,7 @@ Returns true if the str is (completelly) uppercase
 Returns true if the str is (completelly) lowercase
 ## Version list
 
+* 1.2 2018-10-27 Some changes in the class collection.
 * 1.0 2018-09-18 First version  
 
 ## License
