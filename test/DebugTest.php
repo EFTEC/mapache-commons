@@ -9,7 +9,7 @@ class DebugTest extends TestCase
 	/**
 	 * DebugTest constructor.
 	 */
-	protected function setUp():void
+	protected function setUp()
 	{
 		@unlink($this->logFile);
 	}
