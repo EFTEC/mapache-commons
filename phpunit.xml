@@ -10,7 +10,7 @@
          bootstrap="test/bootstrap.php">
     <testsuites>
         <testsuite name="Mapache Commons Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+            <directory suffix="Test.php">./test</directory>
         </testsuite>
     </testsuites>
     <filter>
