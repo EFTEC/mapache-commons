@@ -9,8 +9,9 @@ class DebugTest extends TestCase
 	/**
 	 * DebugTest constructor.
 	 */
-	protected function setUp()
+	public function __construct()
 	{
+		parent::__construct();
 		@unlink($this->logFile);
 	}
 
