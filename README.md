@@ -47,40 +47,79 @@ It's a set of useful function with the next requirements:
 ## Collection
 It's a class with a collection of functions related with arrays and lists.
 
-### isAssoc($array)
+### isAssoc
+
+> isAssoc($array)
+
 Returns true if array is an associative array, false is it's an indexed array
-### first($array)
+### first
+
+> first($array)
+
 Returns the first element of an array.
-### firstKey($array)
+### firstKey
+
+> firstKey($array)
+
 Returns the first key of an array.
-### arrayKeyLower($arr)
+###  arrayKeyLower
+
+> arrayKeyLower($arr)
+
 Change the case of all the keys to lowercase
-### arrayKeyUpper($arr)
+### arrayKeyUpper 
+
+>arrayKeyUpper($arr)
+
 Change the case of all the keys to lowercase
-### generateTable($array,$css=true)
+### generateTable 
+
+>generateTable($array,$css=true)
+
 Generate a html table from an array
 ## Debug
 It's a class with a collection of functions related with debug.
-### var_dump($value,$console=false)
+### var_dump
+
+>var_dump($value,$console=false)
+
 Alternative to var_dump. It "pre" the result or it shows the result in the console of javascript.
-### WriteLog($logFile,$txt)
+
+>var_dump($value,true) // returns a var_dump visible via the console of javascript (browser)
+
+### WriteLog
+
+>WriteLog($logFile,$txt)
+
 It writes a log file and adds the txt to the log.  If the log file is full (10mb) then it's emptied.
 
 ## Text
 It's a class with a collection of functions related with strings.
 
-### isUpper($str)
+### isUpper 
+
+> isUpper($str)
+
 Returns true if the str is (completelly) uppercase
 
-### isLower($str)
+### isLower
+
+> isLower($str)
+
 Returns true if the str is (completelly) lowercase
 
-### between($haystack, $startNeedle, $endNeedle,&$offset=0, $ignoreCase=false)
+### between
+
+> between($haystack, $startNeedle, $endNeedle,&$offset=0, $ignoreCase=false)   
+
 Returns the text between two needles.
 
 > Text::between('Hello Brave World','Hello','World')  // returns " Brave "
 
-### replaceBetween($haystack, $startNeedle, $endneedle, $replaceText, &$offset=0)
+### replaceBetween 
+
+> replaceBetween($haystack, $startNeedle, $endneedle, $replaceText, &$offset=0)
+
 Replace the text between two needles
 
 > Text::replaceBetween('Hello Brave World','Hello','World',' Wayne ') // returns "Hello Wayne World"
