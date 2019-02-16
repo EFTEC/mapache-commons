@@ -37,20 +37,21 @@ class Debug
         echo $txt;
     }
 
-    /**
-     * Write a log file. If the file is over 10mb then the file is resetted.<br>
-     * <code>
-     * Debug::WriteLog('somefile.txt','warning','it is a warning');
-     * Debug::WriteLog('somefile.txt','it is a warning');
-     * </code>
-     * @param mixed $logFile
-     * @param mixed $level
-     * @param string $txt if txt is empty then level is defined as warning and level is used for the description
-     */
+	/**
+	 * Write a log file. If the file is over 10mb then the file is resetted.<br>
+	 * <code>
+	 * Debug::WriteLog('somefile.txt','warning','it is a warning');
+	 * Debug::WriteLog('somefile.txt','it is a warning');
+	 * </code>
+	 * @param mixed $logFile
+	 * @param mixed $level
+	 * @param string $txt if txt is empty then level is defined as warning and level is used for the description
+	 * @return bool
+	 */
     public static function WriteLog($logFile,$level,$txt='')
     {
         if ($logFile == '') {
-            return;
+            return false;
         }
         $fz = @filesize($logFile);
         if (empty($txt)) {
@@ -68,10 +69,17 @@ class Debug
         } else {
             $fp = @fopen($logFile, 'a');
         }
+        if (!$fp) return false;
         $txtW = str_replace("\r\n", " ", $txtW);
         $txtW = str_replace("\n", " ", $txtW);
-        $now = new DateTime();
-        @fwrite($fp, $now->format('Y-m-d H:i:s') . "\t".$level."\t". $txtW . "\n");
-        @fclose($fp);
+        $r=true;
+	    try {
+		    $now = new DateTime();
+		    @fwrite($fp, @$now->format('Y-m-d H:i:s') . "\t".$level."\t". $txtW . "\n");
+	    } catch (\Exception $e) {
+	    	$r=false;
+	    }
+	    @fclose($fp);
+	    return $r;
     }
 }

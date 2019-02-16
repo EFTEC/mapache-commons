@@ -17,7 +17,7 @@ class DebugTest extends TestCase
 
 	public function testWriteLog()
 	{
-		Debug::WriteLog($this->logFile,"error","Hello Brave World");
+		$this->assertEquals(true,Debug::WriteLog($this->logFile,"error","Hello Brave World"));
 		$this->assertEquals(true,file_exists($this->logFile));
 	}
 
