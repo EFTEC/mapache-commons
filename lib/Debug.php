@@ -6,31 +6,35 @@ use DateTime;
 /**
  * Class Debug
  * @package mapache_commons
- * @version 1.1 2018-09-19
+ * @version 1.3 2019-feb-16 10:02 AM 
  * @copyright Jorge Castro Castillo
  * @license Apache-2.0
  * @see https://github.com/EFTEC/mapache-commons
  */
 class Debug
 {
-    /**
-     * @param $value
-     * @param int $type: 0=normal (<pre>), 1=javascript console, 2=table (use future)
-     * @see https://stackoverflow.com/questions/10116063/making-php-var-dump-values-display-one-line-per-value
-     */
-    public static function var_dump($value,$type=1) {
+	/**
+	 * @param $value
+	 * @param int $type : 0=normal (<pre>), 1=javascript console, 2=table (use future)
+	 * @param bool $returnValue
+	 * @see https://stackoverflow.com/questions/10116063/making-php-var-dump-values-display-one-line-per-value
+	 * @return string|void
+	 */
+    public static function var_dump($value, $type=1, $returnValue=false) {
         switch ($type) {
             case 1:
-                echo "<script>console.log(".json_encode($value).");</script>";
+            	$txt="<script>console.log(".json_encode($value).");</script>";
                 break;
             case 2:
-                echo "<pre>";
-                var_dump($value);
-                echo "</pre>";
+                $txt="<pre>";
+                $txt.=print_r($value,true);
+                $txt.="</pre>";
                 break;
             default:
                 trigger_error("var_dump method not yet defined");
         }
+        if ($returnValue) return $txt;
+        echo $txt;
     }
 
     /**

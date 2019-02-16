@@ -5,7 +5,7 @@ namespace mapache_commons;
 /**
  * Class Collection
  * @package mapache_commons
- * @version 1.2 2018-oct-27
+ * @version 1.3 2019-feb-16 10:02 AM 
  * @copyright Jorge Castro Castillo
  * @license Apache-2.0
  * @see https://github.com/EFTEC/mapache-commons
