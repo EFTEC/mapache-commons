@@ -65,12 +65,27 @@ It's a class with a collection of functions related with debug.
 Alternative to var_dump. It "pre" the result or it shows the result in the console of javascript.
 ### WriteLog($logFile,$txt)
 It writes a log file and adds the txt to the log.  If the log file is full (10mb) then it's emptied.
+
 ## Text
 It's a class with a collection of functions related with strings.
+
 ### isUpper($str)
 Returns true if the str is (completelly) uppercase
+
 ### isLower($str)
 Returns true if the str is (completelly) lowercase
+
+### between($haystack, $startNeedle, $endNeedle,&$offset=0, $ignoreCase=false)
+Returns the text between two needles.
+
+> Text::between('Hello Brave World','Hello','World')  // returns " Brave "
+
+### replaceBetween($haystack, $startNeedle, $endneedle, $replaceText, &$offset=0)
+Replace the text between two needles
+
+> Text::replaceBetween('Hello Brave World','Hello','World',' Wayne ') // returns "Hello Wayne World"
+
+
 ## Version list
 
 * 1.3 2019-02-16 Added new methods and Unit test.
