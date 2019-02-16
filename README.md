@@ -56,7 +56,10 @@ Returns true if array is an associative array, false is it's an indexed array
 
 > first($array)
 
-Returns the first element of an array.
+Returns the first element of an array.  
+Sometimes the first element is not the index [0], for example ['key1'=>1,0=2] where the first element is 'key1' and not 0. 
+This function always returns the right value.
+
 ### firstKey
 
 > firstKey($array)
