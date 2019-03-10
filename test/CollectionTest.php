@@ -1,44 +1,34 @@
 <?php
 
+
 use mapache_commons\Collection;
+use mapache_commons\Text;
+use PHPUnit\Framework\TestCase;
 
-class CollectionTest extends \PHPUnit\Framework\TestCase
+class CollectionTest extends TestCase
 {
-	var $drinks=['CocaCola'=>200,'Fanta'=>300,'Sprite'=>500,'Inka Cola'=>999];
-	var $drinksNoAssoc=['CocaCola','Fanta','Sprite','Inka Cola'];
-	
-	
-
-	public function testFirst()
+	public function testsplitOpeningClosing()
 	{
-		$this->assertEquals('200',Collection::first($this->drinks));
+		$this->assertEquals(['a','B,C,D','e','F,G,H']
+			, Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)"));
+		$this->assertEquals(['a','B,C,D','e','F,G,H','']
+			, Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)"
+											,'('
+											,')'
+											,0
+											,false));
+		$this->assertEquals(['a','B,C,D','e','F,G,H','i']
+			, Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)i"));
+		$this->assertEquals(['a','B,C,D','e','F,G<|,H','i,|>j,k']
+			, Collection::splitOpeningClosing("a<|B,C,D|>e<|F,G<|,H|>i,|>j,k"
+											,"<|"
+											,"|>"));
 	}
-
-	public function testArrayKeyLower()
+	public function testsplitNotString()
 	{
-		$this->assertEquals(['cocacola'=>200,'fanta'=>300,'sprite'=>500,'inka cola'=>999]
-			,Collection::arrayKeyLower($this->drinks));
-	}
-
-	public function testFirstKey()
-	{
-		$this->assertEquals('CocaCola',Collection::firstKey($this->drinks));
-	}
-
-	public function testIsAssoc()
-	{
-		$this->assertEquals(true,Collection::isAssoc($this->drinks));
-		$this->assertEquals(false,Collection::isAssoc($this->drinksNoAssoc));
-	}
-
-	public function testArrayKeyUpper()
-	{
-		$this->assertEquals(['COCACOLA'=>200,'FANTA'=>300,'SPRITE'=>500,'INKA COLA'=>999]
-			,Collection::arrayKeyUpper($this->drinks));
-	}
-
-	public function testGenerateTable()
-	{
-		$this->assertTrue(Collection::generateTable(['c1'=>1,'c2'=>2])!="");
-	}
+		$this->assertEquals(['a' , 'b' , 'CC,D,E' , 'e' , 'f']
+			, Collection::splitNotString('a,b,"CC,D,E",e,f',","));
+		$this->assertEquals(['a' , 'b', 'CC D E' ,'', 'e' , 'f']
+			, Collection::splitNotString('a b "CC D E" e f'," ",0,false));		
+	}	
 }

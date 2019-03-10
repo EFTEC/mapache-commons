@@ -2,10 +2,12 @@
 
 namespace mapache_commons;
 
+use phpDocumentor\Reflection\Types\Integer;
+
 /**
  * Class Collection
  * @package mapache_commons
- * @version 1.3 2019-feb-16 10:02 AM 
+ * @version 1.5 2019-mar-10 9:43 AM 
  * @copyright Jorge Castro Castillo
  * @license Apache-2.0
  * @see https://github.com/EFTEC/mapache-commons
@@ -138,5 +140,113 @@ class Collection
 
         $html .= '</table>';
         return $html;
+    }
+
+	/**
+	 * Split a string using an opening and closing tag.
+	 * @param string $text
+	 * @param string $openingTag
+	 * @param string $closingTag
+	 * @param int $startPosition
+	 * @param bool $excludeEmpty if true then it excludes all empty values.
+	 * @return array
+	 */
+    public static function splitOpeningClosing($text,$openingTag='(',$closingTag=')',$startPosition=0,$excludeEmpty=true) {
+    	if (!$text) return [];
+    	$p0=$startPosition;
+    	$oL=strlen($openingTag);
+    	$cL=strlen($closingTag);
+    	$result=[];
+    	// starting.
+	    $even=false;
+    	while($p0!==false) {
+    		if (!$even) {
+			    $p1=strpos($text,$openingTag,$p0);
+			    if ($p1===false) {
+				    $result[]=substr($text,$p0);
+				    break;
+			    }
+			    $result[]=substr($text,$p0,$p1-$p0);
+			    $even=true;
+			    $p0=$p1+$oL;
+		    } else {
+			    $p1=strpos($text,$closingTag,$p0);
+			    if ($p1===false) {
+				    $result[]=substr($text,$p0);
+				    break;
+			    }
+			    $result[]=substr($text,$p0,$p1-$p0);
+			    $even=false;
+			    $p0=$p1+$cL;
+		    }
+	    }
+	    if ($excludeEmpty) {
+		    return array_values(array_filter($result, function ($value) {
+			    return $value !== "";
+		    })); // array_values for rebuild the index (array_filter deletes items but not reindex
+	    } else {
+	    	return $result;
+	    }
+    }
+
+	/**
+	 * Split a string by ignoring parts of string where values are between " or '.
+	 * @param string $text
+	 * @param $separator
+	 * @param int $offset
+	 * @param bool $excludeEmpty
+	 * @return array
+	 */
+    public static function splitNotString($text,$separator,$offset=0,$excludeEmpty=true) {
+    	$p0=$offset;
+    	$even=false;
+    	$sL=strlen($separator);
+    	$pc=null;
+	    $result=[];
+	    while($p0!==false) {
+		    if (!$even) {
+			    $p1=strpos($text,$separator,$p0);
+			    $p1=($p1===false)?PHP_INT_MAX:$p1;
+			    $p2=strpos($text,'"',$p0);
+			    $p2=($p2===false)?PHP_INT_MAX:$p2;
+			    $p3=strpos($text,"'",$p0);
+			    $p3=($p3===false)?PHP_INT_MAX:$p3;
+			    $ptxt=min($p2,$p3);
+			    if ($p1==PHP_INT_MAX && $ptxt==PHP_INT_MAX) {
+			    	// end
+				    $result[]=substr($text,$p0);
+				    break;
+
+			    }
+			    if ($p1<$ptxt) {
+			    	// the next separator is a separator
+				    $result[]=substr($text,$p0,$p1-$p0);
+				    $p0=$p1+$sL;
+			    } else {
+				    // the next separator is a string
+				    $pc=substr($text,$ptxt,1); // " or '
+				    $even=true;
+				    $p0=$ptxt+1;
+			    }
+		    } else {
+		    	// we are inside a string
+			    $p1=strpos($text,$pc,$p0);
+			    if ($p1===false) {
+			    	// we don't found the closing tag
+				    $result[]=substr($text,$p0);
+				    break;
+			    }
+			    $result[]=substr($text,$p0,$p1-$p0);
+			    $even=false; // and we are out of the string
+			    $p0=$p1+1;
+		    }
+	    }
+	    if ($excludeEmpty) {
+		    return array_values(array_filter($result, function ($value) {
+			    return $value !== "";
+		    }));
+	    } else {
+		    return $result;
+	    }
     }
 }

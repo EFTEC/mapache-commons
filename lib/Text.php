@@ -5,7 +5,7 @@ namespace mapache_commons;
 /**
  * Class Text
  * @package mapache_commons
- * @version 1.3 2019-feb-16 10:02 AM 
+ * @version 1.4 2019-feb-16 10:02 AM 
  * @copyright Jorge Castro Castillo
  * @license Apache-2.0
  * @see https://github.com/EFTEC/mapache-commons
@@ -51,6 +51,31 @@ class Text
 		return substr($haystack, $ini, $len);
 	}
 
+	/**
+	 * Strip quotes of a text (" or ')
+	 * @param $text
+	 * @return bool|string
+	 */
+	public static function stripQuotes($text) {
+		if (!$text) return $text;
+		$text=trim($text);
+		$p0=substr($text,0,1); // first character
+		$p1=substr($text,-1); // last character
+		if ($p0==$p1 && ($p0=='"' || $p0=="'")) {
+			return substr($text,1,strlen($text)-2);
+		}
+		return $text;
+	}
+
+	/**
+	 * Replace the text between two needles
+	 * @param $haystack
+	 * @param $startNeedle
+	 * @param $endneedle
+	 * @param $replaceText
+	 * @param int $offset
+	 * @return bool|mixed
+	 */
 	public static function replaceBetween($haystack, $startNeedle, $endneedle, $replaceText, &$offset=0){
 		$ini = strpos($haystack, $startNeedle,$offset);
 		if ($ini === false) return false;
@@ -59,4 +84,57 @@ class Text
 		$offset=$ini+$len;
 		return substr_replace($haystack,$replaceText,$ini,$len);
 	}
+
+	/**
+	 * Remove the first character(s) for a string
+	 * @param string $txt
+	 * @param int $length
+	 * @return bool|string
+	 */
+	public static function removeFirstChars($txt,$length=1) {
+		return substr($txt,$length);
+	}
+
+	/**
+	 * Remove the last character(s) for a string
+	 * @param string $txt
+	 * @param int $length
+	 * @return bool|string
+	 */
+	public static function removeLastChars($txt,$length=1) {
+		return substr($txt,0,-$length);
+	}
+
+	/**
+	 * It separates an argument from the value to the set value.
+	 * Example self::getArgument("arg=200") returns ["arg","200"]
+	 * Example self::getArgument("arg:200",':') returns ["arg","200"]
+	 * @param string $txt
+	 * @param string $set separator.
+	 * @param bool $trimValue
+	 * @return array it always returns a two dimensional array. It could returns [null,null] or ['arg',null]
+	 */
+	public static function getArgument($txt,$set='=',$trimValue=true) {
+		if (empty($txt)) return [null,null];
+		$parts=explode($set,$txt,2);
+		if (count($parts)<2) {
+			$parts[]=null;
+		}
+		$parts[0]=trim($parts[0]);
+		if ($trimValue && $parts[1]) $parts[1]=trim($parts[1]);
+		
+		return $parts;
+	}
+
+	/**
+	 * It returns the first not-space position inside a string.
+	 * @param $txt
+	 * @param int $offset offset position
+	 * @return int
+	 */
+	public static function strPosNotSpace($txt,$offset=0) {
+		$txtTmp=substr($txt,0,$offset).ltrim(substr($txt,$offset));
+		return strlen($txt)-strlen($txtTmp)+$offset;
+	}
+	
 }
