@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.6 2019-dic.-4 8:18 p. m. 
+ * @version   1.7 2019-dic.-4 8:18 p. m. 
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -68,16 +68,7 @@ class Text {
      * @return bool|string
      */
     public static function stripQuotes($text) {
-        if (!$text) {
-            return $text;
-        }
-        $text = trim($text);
-        $p0 = substr($text, 0, 1); // first character
-        $p1 = substr($text, -1); // last character
-        if ($p0 == $p1 && ($p0 == '"' || $p0 == "'")) {
-            return substr($text, 1, strlen($text) - 2);
-        }
-        return $text;
+        return self::removeParenthesis($text,['"',"'"],['"',"'"]);
     }
 
     /**
@@ -270,6 +261,50 @@ class Text {
     }
 
     /**
+     * It adds an parenthesis (or other symbol) at the start and end of the text. If it already has it, then it is not added.
+     * 
+     * @param string       $txt   Input value. Example "hello", "(hello)"
+     * @param string|array $start the open parenthesis, by default it's '('.
+     * @param string|array $end   the close parenthesis, by default it's ')'.
+     *
+     * @return string
+     */
+    public static function addParenthesis($txt, $start = '(', $end = ')') {
+        if(self::hasParenthesis($txt,$start,$end)===false) {
+            return $start.$txt.$end;
+        }
+        return $txt;
+    } 
+    /**
+     * It returns true if the text has an open and ending parenthesis (or other symbol).
+     *
+     * @param string       $txt   Input value. Example "hello", "(hello)"
+     * @param string|array $start the open parenthesis, by default it's '('.
+     * @param string|array $end   the close parenthesis, by default it's ')'.
+     *
+     * @return bool
+     */
+    public static function hasParenthesis($txt, $start = '(', $end = ')') {
+        if ($txt == "") {
+            return false;
+        }
+        if (is_array($start)) {
+            if (count($start) != @count($end)) {
+                return false;
+            }
+            foreach ($start as $k => $v) {
+                if (substr($txt, 0, 1) === $v && substr($txt, -1) === $end[$k]) {
+                    return true;
+                }
+            }
+        } else {
+            if (substr($txt, 0, 1) === $start && substr($txt, -1) === $end) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
      * Remove the initial and final parenthesis but only if both matches.<br/>
      * If the $start and $end are arrays then both must have the same count and arrays are compared by pair of index
      *
@@ -279,7 +314,7 @@ class Text {
      *
      * @return bool|string The string processed of false if error.
      */
-    public static function removeParentesis($txt, $start = '(', $end = ')') {
+    public static function removeParenthesis($txt, $start = '(', $end = ')') {
         if ($txt == "") {
             return $txt;
         }

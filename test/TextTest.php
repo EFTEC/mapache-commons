@@ -17,6 +17,11 @@ class TextTest extends \PHPUnit\Framework\TestCase
 		
 		$this->assertEquals('orld',Text::removeFirstChars('World',1));
         $this->assertEquals('Worl',Text::removeLastChars('World',1));
+        
+        $this->assertEquals('(world)',Text::addParenthesis('world'));
+        $this->assertEquals('(world)',Text::addParenthesis('(world)'));
+        $this->assertEquals('"(world)"',Text::addParenthesis('(world)','"','"'));
+        $this->assertEquals(true,Text::hasParenthesis('(world)'));
 	}
 
 	public function testIsLower()
@@ -80,10 +85,10 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("helloWorld",Text::camelCase('hello_world'));
         
     }
-    public function testremoveParentesis() {
-        $this->assertEquals('hello',Text::removeParentesis('hello'));
-        $this->assertEquals('hello',Text::removeParentesis('(hello)'));
-        $this->assertEquals('hello',Text::removeParentesis('[hello]',['(','{','['],[')','}',']']));
+    public function testremoveParenthesis() {
+        $this->assertEquals('hello',Text::removeParenthesis('hello'));
+        $this->assertEquals('hello',Text::removeParenthesis('(hello)'));
+        $this->assertEquals('hello',Text::removeParenthesis('[hello]',['(','{','['],[')','}',']']));
     }
 
     public function teststrposArray() {

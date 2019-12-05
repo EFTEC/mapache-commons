@@ -326,36 +326,64 @@ Text::strposArray('a,b.d.e,f.g',['x','t',','],0,true);
 // return 7
 ```
 
-### removeParentesis
+### removeParenthesis
 
 Remove the initial and final parenthesis but only if both matches.   
 If the **$start** and **$end** arguments are arrays then both must have the same count and arrays are compared by pair of index
 
 Example:
 ```php
-Text::removeParentesis('hello');
+Text::removeParenthesis('hello');
 // return "hello";
-Text::removeParentesis('(hello)');
+Text::removeParenthesis('(hello)');
 // return "hello";
-Text::removeParentesis('[hello]'
+Text::removeParenthesis('[hello]'
     ,['(','{','[']
     ,[')','}',']']);
 // returns "hello"
-Text::removeParentesis("'hello'"
+Text::removeParenthesis("'hello'"
     ,"'"
     ,"'");
 // returns "hello"
 ```
 
+### hasParenthesis
+
+Returns true if it has both parenthesis.
+
+
+Example:
+```php
+Text::hasParenthesis('hello');
+// return false;
+Text::hasParenthesis('(hello)');
+// return true;
+```
+
+
+### addParenthesis
+
+It adds parenthesis only if the original input does not have it.
+
+Example:
+```php
+Text::addParenthesis('hello');
+// return '(hello)';
+Text::addParenthesis('(hello)');
+// return '(hello)';
+```
+
 
 ## Version list
-
+* 1.7 2019-12-04 new methods
+    * Text::addParenthesis()
+    * Text::hasParenthesis()
 * 1.6 2019-12-04 new methods
     * Text::parseArg()
     * Text::naturalArg()
     * Text::strposArray()
     * Text::camelCase()
-    * Text::removeParentesis()
+    * Text::removeParenthesis()
     * Collection::arrayChangeKeyCaseRecursive()
     * Collection::arraySearchField()
 * 1.5 2019-03-10 new functions:  
