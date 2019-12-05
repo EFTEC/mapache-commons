@@ -1,5 +1,6 @@
-<?php
+<?php /** @noinspection SqlNoDataSourceInspection */
 
+/** @noinspection SqlDialectInspection */
 
 use mapache_commons\Text;
 
@@ -14,6 +15,8 @@ class TextTest extends \PHPUnit\Framework\TestCase
 		$tmp=13;
 		$this->assertEquals(' Wayne ',Text::between('Hello Brave World, Hello Wayne World','Hello','World',$tmp));
 		
+		$this->assertEquals('orld',Text::removeFirstChars('World',1));
+        $this->assertEquals('Worl',Text::removeLastChars('World',1));
 	}
 
 	public function testIsLower()
@@ -58,4 +61,36 @@ class TextTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->assertEquals("Hello Wayne World",Text::replaceBetween('Hello Brave World','Hello','World',' Wayne '));
 	}
+
+    public function testparseArg() {
+        $this->assertEquals(['a'=>'1','b'=>'2'],Text::parseArg('a=1,b=2'));
+        $this->assertEquals(['a'=>'1','b'=>'2'],Text::parseArg('a=1&b=2','&'));
+    }
+    public function testnaturalArg() {
+	    $this->assertEquals(['select'=>'*','from'=>'table','where'=>'1=1']
+        ,Text::naturalArg('select * from table where 1=1'
+                ,['select'=>'req','from'=>'req','where'=>'opt']));
+
+        $this->assertEquals(Array ('item' => 'item', 'export' => 'table', 'inport' => 'file')
+            ,Text::naturalArg('item export table inport file'
+                ,['item'=>'first','export'=>'opt','inport'=>'opt']));
+    }
+    public function testisCamelCase() {
+        $this->assertEquals("helloWorld",Text::camelCase('HelloWorld'));
+        $this->assertEquals("helloWorld",Text::camelCase('hello_world'));
+        
+    }
+    public function testremoveParentesis() {
+        $this->assertEquals('hello',Text::removeParentesis('hello'));
+        $this->assertEquals('hello',Text::removeParentesis('(hello)'));
+        $this->assertEquals('hello',Text::removeParentesis('[hello]',['(','{','['],[')','}',']']));
+    }
+
+    public function teststrposArray() {
+	    //                                       01234567890
+        $this->assertEquals(3,Text::strposArray('a,b.d.e,f.g',['x','t','.']));
+        //                                        01234567890
+        $this->assertEquals(7,Text::strposArray('a,b.d.e,f.g',['x','t',','],0,true));
+    }
+    
 }

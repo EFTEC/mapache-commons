@@ -70,10 +70,56 @@ Split a string by ignoring parts of string where values are between " or '.
 > splitNotString($text,$separator,[$offset=0],[$excludeEmpty=true])
 
 ```php
-Text::splitNotString('a,b,"CC,D,E",e,f' , ",")
+Collection::splitNotString('a,b,"CC,D,E",e,f' , ",");
 // returns ['a' , 'b' , 'CC,D,E' , 'e' , 'f']
 ```
 
+### arrayChangeKeyCaseRecursive
+
+It changes the case (to lower or upper case) of the keys of an array recursively
+
+> arrayChangeKeyCaseRecursive($arr,$case=CASE_LOWER/CASE_UPPER)
+
+```php
+$arr=['A'=>'a','b'=>'b'];
+Collection::arrayChangeKeyCaseRecursive($arr);
+// returns ['a'=>'a','b'=>'b']
+Collection::arrayChangeKeyCaseRecursive($arr,true);
+// returns ['A'=>'a','B'=>'b']
+```
+### arraySearchField
+
+It returns the first (or all) key(s) inside an array/object in an array that matches the value of the field<br>
+
+For example, let's say the next array
+
+[
+    ['name'=>'john'],
+    ['name'=>'mary']
+]
+
+And we want to find the first "name" equals to "mary"
+
+```php
+$array=[]; // our array with all data
+$key=arraySearchField($array,'name','mary');
+```
+
+> arraySearchField($array,$fieldName,$value)
+
+```php
+Collection::arraySearchField(
+    [['name'=>'john'],['name'=>'mary']],'name','mary');
+// returns 1
+
+Collection::arraySearchField(
+    [(object)['name'=>'john'],(object)['name'=>'mary']],'name','mary');
+// returns 1
+Collection::arraySearchField(
+    [['name'=>'john'],['name'=>'mary'],['name'=>'mary']],'name','mary',true);
+// returns [1,2]
+              
+```
 
 
 ### isAssoc
@@ -150,7 +196,7 @@ Returns an array with the name of the argument and value (if any). It always ret
 Returns the first position of a string that it's not a space
 
 ```php
-Example Text::strPosNotSpace('   abc  def')
+Text::strPosNotSpace('   abc  def');
 // returns 3
 
 ```
@@ -215,10 +261,103 @@ Remove the last character(s) for a string
 
 > Text::removeLastChars('Hello') // returns "Hell"
 
+### parseArg
+
+It transforms a text = 'a1=1,a2=2' into an associative array.
+It uses the method parse_str() to do the conversion
+
+> parseArg($text, $separator = ',')
+
+```php
+Text::parseArg('a=1,b=1');
+// returns ['a'=>'1','b'=>'1']
+```
+
+### naturalArg
+
+It parses a natural string and returns a declarative array.
+A "natural string", it is a set of values or arguments separated by space
+, where a value is the index and the new one is the value of the index.
+
+> naturalArg($text, $separator = ',')
+
+* $text the input expression
+* $separator is a associative array where the key is the key of the
+ end result, and the value of each key is 
+   * first = first value. This value is the first of the string expression
+   * req = required value. If the value is missing then it returns null
+   * opt = optional value. If the value is missing the the field returns null
+
+```php
+Text::naturalArg('select * from table where 1=1'
+                ,['select'=>'req','from'=>'req','where'=>'opt']);
+// returns ['select'=>'*','from'=>'table','where'=>'1=1']
+
+Text::naturalArg('item export table inport file'
+                ,['item'=>'first','export'=>'opt','inport'=>'opt']);
+// returns: ['item' => 'item', 'export' => 'table', 'inport' => 'file']
+```
+
+### camelCase
+
+Retains the case of the text minus the first letter that it's converted in lowercase.
+
+Example:
+```php
+Text::camelCase('HelloWorld');
+// return "helloWorld";
+Text::camelCase('hello_world');
+// return "helloWorld";
+
+```
+
+### strposArray
+
+It find the first (or last) ocurrence of a text.
+Unlikely strpos(), this method allows to find more than one neddle.
+
+> function strposArray($haystack, $needles,$offset=0,$last=false)
+
+Example:
+```php
+Text::strposArray('a,b.d.e,f.g',['x','t','.']);
+// return 3
+Text::strposArray('a,b.d.e,f.g',['x','t',','],0,true);
+// return 7
+```
+
+### removeParentesis
+
+Remove the initial and final parenthesis but only if both matches.   
+If the **$start** and **$end** arguments are arrays then both must have the same count and arrays are compared by pair of index
+
+Example:
+```php
+Text::removeParentesis('hello');
+// return "hello";
+Text::removeParentesis('(hello)');
+// return "hello";
+Text::removeParentesis('[hello]'
+    ,['(','{','[']
+    ,[')','}',']']);
+// returns "hello"
+Text::removeParentesis("'hello'"
+    ,"'"
+    ,"'");
+// returns "hello"
+```
 
 
 ## Version list
 
+* 1.6 2019-12-04 new methods
+    * Text::parseArg()
+    * Text::naturalArg()
+    * Text::strposArray()
+    * Text::camelCase()
+    * Text::removeParentesis()
+    * Collection::arrayChangeKeyCaseRecursive()
+    * Collection::arraySearchField()
 * 1.5 2019-03-10 new functions:  
    Collection:splitOpeningClosing()  
    Text::strPosNotSpace()  
