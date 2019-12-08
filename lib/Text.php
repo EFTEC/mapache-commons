@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.7 2019-dic.-4 8:18 p. m. 
+ * @version   1.8 2019-dec-8 
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -42,20 +42,33 @@ class Text {
      * Example: between('mary has a lamb','has','lamb') // returns ' a '
      *
      * @param string   $haystack
-     * @param string   $startNeedle
-     * @param string   $endNeedle
+     * @param string   $startNeedle if empty then it starts at the start of the haystack.
+     * @param string   $endNeedle if empty then it ends at the end of the haystack
      * @param null|int $offset
      * @param bool     $ignoreCase
      *
      * @return bool|string
      */
     public static function between($haystack, $startNeedle, $endNeedle, &$offset = 0, $ignoreCase = false) {
-        $ini = ($ignoreCase) ? @stripos($haystack, $startNeedle, $offset) : @strpos($haystack, $startNeedle, $offset);
+        if ($startNeedle === '') {
+            $ini = 0;
+        } else {
+            $ini = ($ignoreCase) ? @stripos($haystack, $startNeedle, $offset)
+                : @strpos($haystack, $startNeedle, $offset);
+        }
         if ($ini === false) {
             return false;
         }
         $ini += strlen($startNeedle);
-        $len = (($ignoreCase) ? stripos($haystack, $endNeedle, $ini) : strpos($haystack, $endNeedle, $ini)) - $ini;
+        if ($endNeedle === '') {
+            $len = strlen($haystack);
+        } else {
+            $len = (($ignoreCase) ? stripos($haystack, $endNeedle, $ini) : strpos($haystack, $endNeedle, $ini)) ;
+            if($len===false) {
+                return false;
+            } 
+            $len-= $ini;
+        }
         $offset = $ini + $len;
         return substr($haystack, $ini, $len);
     }

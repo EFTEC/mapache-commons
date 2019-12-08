@@ -8,6 +8,10 @@ class TextTest extends \PHPUnit\Framework\TestCase
 {
 	public function testBetween()
 	{
+        $this->assertEquals('Hello ',Text::between('Hello Brave World','','Brave'));
+        $this->assertEquals(' World',Text::between('Hello Brave World','Brave',''));
+        $this->assertEquals(false,Text::between('Hello Brave World','Hello','xxx'));
+        $this->assertEquals(false,Text::between('Hello Brave World','xxx','Hello'));
 		$this->assertEquals(' Brave ',Text::between('Hello Brave World','Hello','World'));
 		$this->assertEquals(false,Text::between('Hello Brave World','hello','world'));
 		$tmp=0;

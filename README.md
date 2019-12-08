@@ -375,6 +375,8 @@ Text::addParenthesis('(hello)');
 
 
 ## Version list
+* 1.8 2019-12-04
+    * Text::between() now allows empty $startNeedle and $endNeedle
 * 1.7 2019-12-04 new methods
     * Text::addParenthesis()
     * Text::hasParenthesis()
