@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.8 2019-dec-8 
+ * @version   1.9 2019-dec-9
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -16,9 +16,9 @@ class Text {
     /**
      * Returns true if the str is (completelly) uppercase
      *
-     * @param $str
+     * @param string $str Input text
      *
-     * @return bool
+     * @return bool true if the text is uppercase, otherwise false
      * @see https://stackoverflow.com/questions/4211875/check-if-a-string-is-all-caps-in-php
      */
     public static function isUpper($str) {
@@ -42,8 +42,10 @@ class Text {
      * Example: between('mary has a lamb','has','lamb') // returns ' a '
      *
      * @param string   $haystack
-     * @param string   $startNeedle if empty then it starts at the start of the haystack.
-     * @param string   $endNeedle if empty then it ends at the end of the haystack
+     * @param string   $startNeedle The initial text to search<br />
+     *                              if empty then it starts at the start of the haystack.
+     * @param string   $endNeedle   The end tag to search<br />
+     *                              if empty then it ends at the end of the haystack
      * @param null|int $offset
      * @param bool     $ignoreCase
      *
@@ -63,11 +65,11 @@ class Text {
         if ($endNeedle === '') {
             $len = strlen($haystack);
         } else {
-            $len = (($ignoreCase) ? stripos($haystack, $endNeedle, $ini) : strpos($haystack, $endNeedle, $ini)) ;
-            if($len===false) {
+            $len = (($ignoreCase) ? stripos($haystack, $endNeedle, $ini) : strpos($haystack, $endNeedle, $ini));
+            if ($len === false) {
                 return false;
-            } 
-            $len-= $ini;
+            }
+            $len -= $ini;
         }
         $offset = $ini + $len;
         return substr($haystack, $ini, $len);
@@ -81,53 +83,107 @@ class Text {
      * @return bool|string
      */
     public static function stripQuotes($text) {
-        return self::removeParenthesis($text,['"',"'"],['"',"'"]);
+        return self::removeParenthesis($text, ['"', "'"], ['"', "'"]);
+    }
+
+    /**
+     * Remove the initial and final parenthesis but only if both matches.<br/>
+     * If the $start and $end are arrays then both must have the same count and arrays are compared by pair of index
+     *
+     * @param string       $txt   Input value. Example "hello", "(hello)"
+     * @param string|array $start the open parenthesis, by default it's '('.
+     * @param string|array $end   the close parenthesis, by default it's ')'.
+     *
+     * @return bool|string The string processed of false if error.
+     */
+    public static function removeParenthesis($txt, $start = '(', $end = ')') {
+        if ($txt == "") {
+            return $txt;
+        }
+        if (is_array($start)) {
+            if (count($start) != @count($end)) {
+                return false;
+            }
+            foreach ($start as $k => $v) {
+                if (substr($txt, 0, 1) === $v && substr($txt, -1) === $end[$k]) {
+                    return substr($txt, 1, strlen($txt) - 2);
+                }
+            }
+        } else {
+            if (substr($txt, 0, 1) === $start && substr($txt, -1) === $end) {
+                return substr($txt, 1, strlen($txt) - 2);
+            }
+        }
+        return $txt;
     }
 
     /**
      * Replace the text between two needles
      *
-     * @param     $haystack
-     * @param     $startNeedle
-     * @param     $endneedle
-     * @param     $replaceText
-     * @param int $offset
+     * @param string   $haystack    the input value
+     * @param string   $startNeedle The initial text to search<br />
+     *                              if empty then it starts at the start of the haystack.
+     * @param string   $endNeedle   The end tag to search<br />
+     *                              if empty then it ends at the end of the haystack
+     * @param string   $replaceText Text to replace
+     * @param null|int $offset      the offset position to start the search.
+     * @param bool     $replaceTag  If true then it also replaces the tags
      *
      * @return bool|mixed
      */
-    public static function replaceBetween($haystack, $startNeedle, $endneedle, $replaceText, &$offset = 0) {
-        $ini = strpos($haystack, $startNeedle, $offset);
+    public static function replaceBetween(
+        $haystack,
+        $startNeedle,
+        $endNeedle,
+        $replaceText,
+        &$offset = 0,
+        $replaceTag = false
+    ) {
+        $ini = ($startNeedle === '') ? 0 : strpos($haystack, $startNeedle, $offset);
         if ($ini === false) {
             return false;
         }
-        $ini += strlen($startNeedle);
-        $len = strpos($haystack, $endneedle, $ini) - $ini;
-        $offset = $ini + $len;
-        return substr_replace($haystack, $replaceText, $ini, $len);
+        $p1 = ($endNeedle === '') ? strlen($haystack) : strpos($haystack, $endNeedle, $ini);
+        if ($p1 === false) {
+            return false;
+        }
+        if ($replaceTag) {
+            $sLen = strlen($startNeedle);
+            $len = $p1 + $sLen + strlen($endNeedle) - $ini;
+            $offset = $ini + $len;
+            return substr_replace($haystack, $replaceText, $ini, $len);
+
+        } else {
+            $ini += strlen($startNeedle);
+            $len = $p1 - $ini;
+            $offset = $ini + $len;
+            return substr_replace($haystack, $replaceText, $ini, $len);
+        }
+
     }
 
     /**
      * Remove the first character(s) for a string
      *
-     * @param string $txt
-     * @param int    $length
+     * @param string $str The input text
+     * @param int    $length The amount of characters to remove
      *
      * @return bool|string
      */
-    public static function removeFirstChars($txt, $length = 1) {
-        return substr($txt, $length);
+    public static function removeFirstChars($str, $length = 1) {
+        return substr($str, $length);
     }
 
     /**
      * Remove the last character(s) for a string
      *
-     * @param string $txt
-     * @param int    $length
+     * @param string $str The input text
+     * @param int    $length The amount of characters to remove
      *
      * @return bool|string
      */
-    public static function removeLastChars($txt, $length = 1) {
-        return substr($txt, 0, -$length);
+    public static function removeLastChars($str, $length = 1) {
+        return substr($str, 0, -$length);
     }
 
     /**
@@ -135,17 +191,17 @@ class Text {
      * Example self::getArgument("arg=200") returns ["arg","200"]
      * Example self::getArgument("arg:200",':') returns ["arg","200"]
      *
-     * @param string $txt
-     * @param string $set separator.
+     * @param string $str The input text
+     * @param string $set The separator of operator
      * @param bool   $trimValue
      *
      * @return array it always returns a two dimensional array. It could returns [null,null] or ['arg',null]
      */
-    public static function getArgument($txt, $set = '=', $trimValue = true) {
-        if (empty($txt)) {
+    public static function getArgument($str, $set = '=', $trimValue = true) {
+        if (empty($str)) {
             return [null, null];
         }
-        $parts = explode($set, $txt, 2);
+        $parts = explode($set, $str, 2);
         if (count($parts) < 2) {
             $parts[] = null;
         }
@@ -160,14 +216,14 @@ class Text {
     /**
      * It returns the first non-space position inside a string.
      *
-     * @param string $txt    input string
+     * @param string $str    input string
      * @param int    $offset offset position
      *
      * @return int the position of the first non-space
      */
-    public static function strPosNotSpace($txt, $offset = 0) {
-        $txtTmp = substr($txt, 0, $offset) . ltrim(substr($txt, $offset));
-        return strlen($txt) - strlen($txtTmp) + $offset;
+    public static function strPosNotSpace($str, $offset = 0) {
+        $txtTmp = substr($str, 0, $offset) . ltrim(substr($str, $offset));
+        return strlen($str) - strlen($txtTmp) + $offset;
     }
 
     /**
@@ -275,7 +331,7 @@ class Text {
 
     /**
      * It adds an parenthesis (or other symbol) at the start and end of the text. If it already has it, then it is not added.
-     * 
+     *
      * @param string       $txt   Input value. Example "hello", "(hello)"
      * @param string|array $start the open parenthesis, by default it's '('.
      * @param string|array $end   the close parenthesis, by default it's ')'.
@@ -283,11 +339,12 @@ class Text {
      * @return string
      */
     public static function addParenthesis($txt, $start = '(', $end = ')') {
-        if(self::hasParenthesis($txt,$start,$end)===false) {
-            return $start.$txt.$end;
+        if (self::hasParenthesis($txt, $start, $end) === false) {
+            return $start . $txt . $end;
         }
         return $txt;
-    } 
+    }
+
     /**
      * It returns true if the text has an open and ending parenthesis (or other symbol).
      *
@@ -316,36 +373,6 @@ class Text {
             }
         }
         return false;
-    }
-    /**
-     * Remove the initial and final parenthesis but only if both matches.<br/>
-     * If the $start and $end are arrays then both must have the same count and arrays are compared by pair of index
-     *
-     * @param string       $txt   Input value. Example "hello", "(hello)"
-     * @param string|array $start the open parenthesis, by default it's '('.
-     * @param string|array $end   the close parenthesis, by default it's ')'.
-     *
-     * @return bool|string The string processed of false if error.
-     */
-    public static function removeParenthesis($txt, $start = '(', $end = ')') {
-        if ($txt == "") {
-            return $txt;
-        }
-        if (is_array($start)) {
-            if (count($start) != @count($end)) {
-                return false;
-            }
-            foreach ($start as $k => $v) {
-                if (substr($txt, 0, 1) === $v && substr($txt, -1) === $end[$k]) {
-                    return substr($txt, 1, strlen($txt) - 2);
-                }
-            }
-        } else {
-            if (substr($txt, 0, 1) === $start && substr($txt, -1) === $end) {
-                return substr($txt, 1, strlen($txt) - 2);
-            }
-        }
-        return $txt;
     }
 
     /**

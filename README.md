@@ -239,11 +239,14 @@ Returns the text between two needles.
 
 ### replaceBetween 
 
-> replaceBetween($haystack, $startNeedle, $endneedle, $replaceText, &$offset=0)
+> replaceBetween($haystack, $startNeedle, $endneedle, $replaceText, &$offset=0,$$replaceTag=false)
 
 Replace the text between two needles
+* If $replaceTag is true then it also replaces the $startNeedle and $endneedle
 
 > Text::replaceBetween('Hello Brave World','Hello','World',' Wayne ') // returns "Hello Wayne World"
+
+
 
 ### removeFirstChars 
 
@@ -375,6 +378,9 @@ Text::addParenthesis('(hello)');
 
 
 ## Version list
+* 1.9 2019-12-09
+    * Text::replacetext() it does not crashes if the end tag is missing.
+    * Text::replacetext() it as a new argument
 * 1.8 2019-12-04
     * Text::between() now allows empty $startNeedle and $endNeedle
 * 1.7 2019-12-04 new methods

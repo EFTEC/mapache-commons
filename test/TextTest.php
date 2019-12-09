@@ -69,6 +69,10 @@ class TextTest extends \PHPUnit\Framework\TestCase
 	public function testReplaceBetween()
 	{
 		$this->assertEquals("Hello Wayne World",Text::replaceBetween('Hello Brave World','Hello','World',' Wayne '));
+		$off=0;
+        $this->assertEquals("world",Text::replaceBetween('(hello)','(',')','world',$off,true));
+        $off=0;
+        $this->assertEquals("hi:world",Text::replaceBetween('hi:(hello)','(',')','world',$off,true));
 	}
 
     public function testparseArg() {
