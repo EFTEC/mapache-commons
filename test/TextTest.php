@@ -79,6 +79,8 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals("ABCD1234567890ABCD",Text::replaceBetween('ABCD(123)ABCD','(',')','1234567890',$off,true));
         $off=0;
         $this->assertEquals("ABCD123ABCD",Text::replaceBetween('ABCD(1234567890)ABCD','(',')','123',$off,true));
+        $off=0;
+        $this->assertEquals("ABCD123ABCD",Text::replaceBetween('ABCD(((1234567890)))ABCD','(((',')))','123',$off,true));
 	}
 
     public function testparseArg() {

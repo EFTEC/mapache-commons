@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.9.1 2019-dec-9
+ * @version   1.9.2 2019-dec-9
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -148,8 +148,7 @@ class Text {
             return false;
         }
         if ($replaceTag) {
-            $sLen = strlen($startNeedle);
-            $len = $p1 + $sLen + strlen($endNeedle) - $ini-1;
+            $len = $p1 + strlen($endNeedle) - $ini;
             $offset = $ini + $len;
             return substr_replace($haystack, $replaceText, $ini, $len);
 
