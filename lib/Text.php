@@ -149,7 +149,7 @@ class Text {
         }
         if ($replaceTag) {
             $sLen = strlen($startNeedle);
-            $len = $p1 + $sLen + strlen($endNeedle) - $ini;
+            $len = $p1 + $sLen + strlen($endNeedle) - $ini-1;
             $offset = $ini + $len;
             return substr_replace($haystack, $replaceText, $ini, $len);
 
