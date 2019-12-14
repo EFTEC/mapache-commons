@@ -65,6 +65,8 @@ class TextTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals(3,Text::strPosNotSpace('   abc  def',2));
 		$this->assertEquals(8,Text::strPosNotSpace('   abc  def',6));
 		$this->assertEquals(0,Text::strPosNotSpace('abc'));
+        $this->assertEquals(2,Text::strPosNotSpace(" \nabc"));
+        $this->assertEquals(1,Text::strPosNotSpace(" \nabc",0," "));
 	}
 	public function testReplaceBetween()
 	{
@@ -86,6 +88,11 @@ class TextTest extends \PHPUnit\Framework\TestCase
     public function testparseArg() {
         $this->assertEquals(['a'=>'1','b'=>'2'],Text::parseArg('a=1,b=2'));
         $this->assertEquals(['a'=>'1','b'=>'2'],Text::parseArg('a=1&b=2','&'));
+    }
+    public function testReplaceCurlyVariable() {
+	    $this->assertEquals('hello=world',Text::replaceCurlyVariable('hello={{var}}',['var'=>'world']));
+        $this->assertEquals('hello=world hello2=world2',Text::replaceCurlyVariable('hello={{var}} hello2={{var2}}',['var'=>'world','var2'=>'world2']));
+        $this->assertEquals('hello=world hello2=world2 hello3=',Text::replaceCurlyVariable('hello={{var}} hello2={{var2}} hello3={{varxx}}',['var'=>'world','var2'=>'world2']));
     }
     public function testnaturalArg() {
 	    $this->assertEquals(['select'=>'*','from'=>'table','where'=>'1=1']

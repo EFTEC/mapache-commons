@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.9.2 2019-dec-9
+ * @version   1.11 2019-dec-14
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -217,11 +217,12 @@ class Text {
      *
      * @param string $str    input string
      * @param int    $offset offset position
+     * @param string $charlist list of characters considered as space
      *
      * @return int the position of the first non-space
      */
-    public static function strPosNotSpace($str, $offset = 0) {
-        $txtTmp = substr($str, 0, $offset) . ltrim(substr($str, $offset));
+    public static function strPosNotSpace($str, $offset = 0, $charlist=" \t\n\r\0\x0B") {
+        $txtTmp = substr($str, 0, $offset) . ltrim(substr($str, $offset),$charlist);
         return strlen($str) - strlen($txtTmp) + $offset;
     }
 
@@ -326,6 +327,29 @@ class Text {
             }
         }
         return $result;
+    }
+
+    /**
+     * Replaces all variables defined between {{ }} by a variable inside the dictionary of values.<br>
+     * Example: replaceCurlyVariable('hello={{var}}',['var'=>'world']) // hello=world<br>
+     *
+     * @param string $string The input value. It could contains variables defined as {{namevar}}
+     * @param array  $values The dictionary of values.
+     * @param string $notFound If the variable inside the curly braces does not exist,
+     *                         then it is replaced by this value
+     *
+     * @return string|string[]|null
+     */
+    public static function replaceCurlyVariable($string,$values,$notFound='') {
+        return preg_replace_callback('/{{\s?(\w+)\s?}}/u', function ($matches) use ($values,$notFound) {
+            if (is_array($matches)) {
+                $item = substr($matches[0], 2, strlen($matches[0]) - 4); // removes {{ and }}
+                return isset($values[$item])? $values[$item] : $notFound ;
+            } else {
+                $item = substr($matches, 2, strlen($matches) - 4); // removes {{ and }}
+                return isset($values[$item])? $values[$item] : $notFound ;
+            }
+        }, $string);
     }
 
     /**

@@ -378,6 +378,10 @@ Text::addParenthesis('(hello)');
 
 
 ## Version list
+* 1.11
+    * Text::replaceCurlyVariable Added method
+* 1.10
+    * Text::strPosNotSpace() added argument $charlist
 * 1.9 2019-12-09
     * Text::replacetext() it does not crashes if the end tag is missing.
     * Text::replacetext() it as a new argument
