@@ -341,6 +341,7 @@ class Text {
      * @return string|string[]|null
      */
     public static function replaceCurlyVariable($string,$values,$notFound='') {
+        if(strpos($string,'{{')===false) return $string; // nothing to replace.
         return preg_replace_callback('/{{\s?(\w+)\s?}}/u', function ($matches) use ($values,$notFound) {
             if (is_array($matches)) {
                 $item = substr($matches[0], 2, strlen($matches[0]) - 4); // removes {{ and }}

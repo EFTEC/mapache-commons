@@ -49,7 +49,7 @@ It's a class with a collection of functions related with arrays and lists.
 
 ### splitOpeningClosing
 
-> splitOpeningClosing($text,[$openingTag='('],[$closingTag=')'],[$startPosition=0],[$excludeEmpty=true])
+> splitOpeningClosing($text,[$openingTag='('],[$closingTag=')'],[$startPosition=0],[$excludeEmpty=true],[$includeTag=false])
 
 Split a string by an opening and closing tag and returns an array with the result.
 
@@ -378,6 +378,8 @@ Text::addParenthesis('(hello)');
 
 
 ## Version list
+* 1.12
+    * Collection:splitOpeningClosing added argument $includeTag
 * 1.11
     * Text::replaceCurlyVariable Added method
 * 1.10

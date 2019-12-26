@@ -11,6 +11,8 @@ class CollectionTest extends TestCase
 	{
 		$this->assertEquals(['a','B,C,D','e','F,G,H']
 			, Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)"));
+        $this->assertEquals(['a','(B,C,D)','e','(F,G,H)']
+            , Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)",'(',')',0,true,true));
 		$this->assertEquals(['a','B,C,D','e','F,G,H','']
 			, Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)"
 											,'('
@@ -34,6 +36,7 @@ class CollectionTest extends TestCase
 	{
 		$this->assertEquals(['a' , 'b' , 'CC,D,E' , 'e' , 'f']
 			, Collection::splitNotString('a,b,"CC,D,E",e,f',","));
+		
 		$this->assertEquals(['a' , 'b', 'CC D E' ,'', 'e' , 'f']
 			, Collection::splitNotString('a b "CC D E" e f'," ",0,false));		
 	}	

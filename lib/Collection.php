@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Collection
  *
  * @package   mapache_commons
- * @version   1.6 2019-dic.-4 8:17 p. m. 
+ * @version   1.12 2019-dec-26
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -15,7 +15,7 @@ class Collection {
     /**
      * Returns true if array is an associative array, false is it's an indexed array
      *
-     * @param array $array
+     * @param array $array input array
      *
      * @return bool
      * @see https://stackoverflow.com/questions/173400/how-to-check-if-php-array-is-associative-or-sequential
@@ -27,7 +27,7 @@ class Collection {
     /**
      * Returns the first element of an array.
      *
-     * @param $array
+     * @param array $array input array
      *
      * @return mixed
      * @see https://stackoverflow.com/questions/1921421/get-the-first-element-of-an-array
@@ -39,7 +39,7 @@ class Collection {
     /**
      * Returns the first key of an array.
      *
-     * @param $array
+     * @param array $array input array
      *
      * @return mixed
      * @see  https://stackoverflow.com/questions/1921421/get-the-first-element-of-an-array
@@ -52,42 +52,42 @@ class Collection {
     /**
      * Change the case of the key to lowercase
      *
-     * @param $arr
+     * @param array $array input array
      *
      * @return array
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
      */
-    public static function arrayKeyLower($arr) {
+    public static function arrayKeyLower($array) {
         return array_map(function ($item) {
             if (is_array($item)) {
                 $item = self::arrayKeyLower($item);
             }
             return $item;
-        }, array_change_key_case($arr, CASE_LOWER));
+        }, array_change_key_case($array, CASE_LOWER));
     }
 
     /**
      * Change the case of the key to lowercase
      *
-     * @param $arr
+     * @param array $array input array
      *
      * @return array
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
      */
-    public static function arrayKeyUpper($arr) {
+    public static function arrayKeyUpper($array) {
         return array_map(function ($item) {
             if (is_array($item)) {
                 $item = self::arrayKeyUpper($item);
             }
             return $item;
-        }, array_change_key_case($arr, CASE_UPPER));
+        }, array_change_key_case($array, CASE_UPPER));
     }
 
     /**
      * Generate a table from an array
      *
-     * @param array|null  $array
-     * @param string|bool $css if true then it uses the build in style. If false then it doesn't use style. If string then it uses as class
+     * @param array|null  $array input array
+     * @param string|bool $css   if true then it uses the build in style. If false then it doesn't use style. If string then it uses as class
      *
      * @return string
      * @see https://stackoverflow.com/questions/4746079/how-to-create-a-html-table-from-a-php-array
@@ -152,22 +152,27 @@ class Collection {
     }
 
     /**
-     * Split a string using an opening and closing tag.
+     * Split a string using an opening and closing tag.<br/>
+     * Example:<br/>
+     * Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)"); // ['a','B,C,D','e','F,G,H']<br/>
+     * Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)i"); // ['a','B,C,D','e','F,G,H','i'] <br>
      *
-     * @param string $text
-     * @param string $openingTag
-     * @param string $closingTag
-     * @param int    $startPosition
-     * @param bool   $excludeEmpty if true then it excludes all empty values.
+     * @param string $text          input text to separated
+     * @param string $openingTag    Opening tag
+     * @param string $closingTag    closing tag
+     * @param int    $startPosition start position (by default it is zero)
+     * @param bool   $excludeEmpty  if true then it excludes all empty values.
+     * @param bool   $includeTag    if true then it includes the tag.
      *
-     * @return array
+     * @return array If errror then it returns an empty array
      */
     public static function splitOpeningClosing(
         $text,
         $openingTag = '(',
         $closingTag = ')',
         $startPosition = 0,
-        $excludeEmpty = true
+        $excludeEmpty = true,
+        $includeTag = false
     ) {
         if (!$text) {
             return [];
@@ -194,7 +199,8 @@ class Collection {
                     $result[] = substr($text, $p0);
                     break;
                 }
-                $result[] = substr($text, $p0, $p1 - $p0);
+                $result[] = $includeTag ? $openingTag . substr($text, $p0, $p1 - $p0) . $closingTag
+                    : substr($text, $p0, $p1 - $p0);
                 $even = false;
                 $p0 = $p1 + $cL;
             }
@@ -209,10 +215,12 @@ class Collection {
     }
 
     /**
-     * Split a string by ignoring parts of string where values are between " or '.
+     * Split a string by ignoring parts of string where values are between " or '.<br>
+     * Example:<br/>
+     * Collection::splitNotString('a,b,"CC,D,E",e,f' ,","); // ['a','b','CC,D,E','e','f']<br/>
      *
-     * @param string $text
-     * @param        $separator
+     * @param string $text input text
+     * @param string $separator
      * @param int    $offset
      * @param bool   $excludeEmpty
      *
@@ -274,22 +282,22 @@ class Collection {
     /**
      * It changes the case (to lower or upper case) of the keys of an array recursively
      *
-     * @param array $arr array
+     * @param array $array input array
      *
-     * @param int $case [optional] by default is CASE_LOWER <p>
-     *              Either CASE_UPPER or
-     *              CASE_LOWER (default)</p>
+     * @param int   $case  [optional] by default is CASE_LOWER <p>
+     *                    Either CASE_UPPER or
+     *                    CASE_LOWER (default)</p>
      *
      * @return array
      * @see https://www.php.net/manual/en/function.array-change-key-case.php
      */
-    public static function arrayChangeKeyCaseRecursive($arr,$case=CASE_LOWER) {
+    public static function arrayChangeKeyCaseRecursive($array, $case = CASE_LOWER) {
         return array_map(function ($item) {
             if (is_array($item)) {
                 $item = self::arrayChangeKeyCaseRecursive($item);
             }
             return $item;
-        }, array_change_key_case($arr,$case));
+        }, array_change_key_case($array, $case));
     }
 
     /**
@@ -304,39 +312,42 @@ class Collection {
      *
      * @return int|string|bool|array return false if not found or if error.
      */
-    public static function arraySearchField($array,$fieldName,$value,$returnAll=false) {
-        $first=reset($array);
-        $result=[];
-        if(is_object($first)) {
-            foreach($array as $k=>$v) {
-                if(@$v->{$fieldName}===$value) {
-                    if($returnAll) 
-                        $result[]=$k; 
-                    else
+    public static function arraySearchField($array, $fieldName, $value, $returnAll = false) {
+        $first = reset($array);
+        $result = [];
+        if (is_object($first)) {
+            foreach ($array as $k => $v) {
+                if (@$v->{$fieldName} === $value) {
+                    if ($returnAll) {
+                        $result[] = $k;
+                    } else {
                         return $k;
+                    }
                 }
             }
-            if($returnAll)
+            if ($returnAll) {
                 return $result;
-            else
+            } else {
                 return false;
-        }
-        if(is_array($first)) {
-            foreach($array as $k=>$v) {
-                if(@$v[$fieldName]===$value) {
-                    if($returnAll)
-                        $result[]=$k;
-                    else
-                        return $k;
-                }                
             }
-            if($returnAll)
+        }
+        if (is_array($first)) {
+            foreach ($array as $k => $v) {
+                if (@$v[$fieldName] === $value) {
+                    if ($returnAll) {
+                        $result[] = $k;
+                    } else {
+                        return $k;
+                    }
+                }
+            }
+            if ($returnAll) {
                 return $result;
-            else
+            } else {
                 return false;
+            }
         }
         return false;
     }
-
 
 }
