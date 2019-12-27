@@ -378,6 +378,7 @@ Text::addParenthesis('(hello)');
 
 
 ## Version list
+* 1.13 Text::replaceCurlyVariable() updated
 * 1.12
     * Collection:splitOpeningClosing added argument $includeTag
 * 1.11

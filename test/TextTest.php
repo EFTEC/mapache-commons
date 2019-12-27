@@ -93,6 +93,9 @@ class TextTest extends \PHPUnit\Framework\TestCase
 	    $this->assertEquals('hello=world',Text::replaceCurlyVariable('hello={{var}}',['var'=>'world']));
         $this->assertEquals('hello=world hello2=world2',Text::replaceCurlyVariable('hello={{var}} hello2={{var2}}',['var'=>'world','var2'=>'world2']));
         $this->assertEquals('hello=world hello2=world2 hello3=',Text::replaceCurlyVariable('hello={{var}} hello2={{var2}} hello3={{varxx}}',['var'=>'world','var2'=>'world2']));
+        $this->assertEquals('hello=world hello2=world2 hello3={{varxx}}'
+            ,Text::replaceCurlyVariable('hello={{var}} hello2={{var2}} hello3={{varxx}}'
+                ,['var'=>'world','var2'=>'world2'],true));
     }
     public function testnaturalArg() {
 	    $this->assertEquals(['select'=>'*','from'=>'table','where'=>'1=1']
