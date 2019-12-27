@@ -338,12 +338,12 @@ class Text {
      *
      * @param string $string The input value. It could contains variables defined as {{namevar}}
      * @param array  $values The dictionary of values.
-     * @param bool $notFoundThenKeep If true and the value is not found, then it keeps the value.
+     * @param bool $notFoundThenKeep [false] If true and the value is not found, then it keeps the value.
      *                               Otherwise, it is replaced by an empty value
      *
      * @return string|string[]|null
      */
-    public static function replaceCurlyVariable($string,$values,$notFoundThenKeep=true) {
+    public static function replaceCurlyVariable($string,$values,$notFoundThenKeep=false) {
         if(strpos($string,'{{')===false) return $string; // nothing to replace.
         return preg_replace_callback('/{{\s?(\w+)\s?}}/u', function ($matches) use ($values,$notFoundThenKeep) {
             if (is_array($matches)) {
