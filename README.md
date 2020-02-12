@@ -3,7 +3,7 @@ It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is
 
 [![Build Status](https://travis-ci.org/EFTEC/mapache-commons.svg?branch=master)](https://travis-ci.org/EFTEC/mapache-commons)
 [![Packagist](https://img.shields.io/packagist/v/eftec/mapache-commons.svg)](https://packagist.org/packages/eftec/mapache-commons)
-[![Maintenance](https://img.shields.io/maintenance/yes/2019.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2020.svg)]()
 [![composer](https://img.shields.io/badge/composer-%3E1.6-blue.svg)]()
 [![php](https://img.shields.io/badge/php->5.6-green.svg)]()
 [![php](https://img.shields.io/badge/php-7.x-green.svg)]()
@@ -378,6 +378,8 @@ Text::addParenthesis('(hello)');
 
 
 ## Version list
+
+* 1.14 Text::camelCase() solved a small bug  
 * 1.13 Text::replaceCurlyVariable() updated
 * 1.12
     * Collection:splitOpeningClosing added argument $includeTag

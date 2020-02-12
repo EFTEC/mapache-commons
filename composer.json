@@ -1,7 +1,7 @@
 {
     "name": "eftec/mapache-commons",
     "description": "It's a set of useful functions for PHP. The name is a pun.",
-    "version": "1.13",
+    "version": "1.14",
     "type": "library",
     "keywords": [
         "collection",

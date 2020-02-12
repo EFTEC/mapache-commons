@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.13 2019-dec-27
+ * @version   1.14 2020-feb-12
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -423,8 +423,12 @@ class Text {
             for ($i = 0; $i < $l; $i++) {
                 $c = $txt[$i];
                 if ($c == '_' || $c == ' ') {
-                    $result .= strtoupper($txt[$i + 1]);
-                    $i++;
+                    if($i!=$l-1) {
+                        $result .= strtoupper($txt[$i + 1]);
+                        $i++;
+                    } else {
+                        $result .= $c;
+                    }
                 } else {
                     $result .= $c;
                 }

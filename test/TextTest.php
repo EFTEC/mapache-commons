@@ -108,7 +108,12 @@ class TextTest extends \PHPUnit\Framework\TestCase
     }
     public function testisCamelCase() {
         $this->assertEquals("helloWorld",Text::camelCase('HelloWorld'));
+        
         $this->assertEquals("helloWorld",Text::camelCase('hello_world'));
+        
+        $txt='object= ';
+
+        $this->assertEquals("object= ",Text::camelCase($txt));
         
     }
     public function testremoveParenthesis() {
