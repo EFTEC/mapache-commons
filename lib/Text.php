@@ -397,11 +397,13 @@ class Text
      * @return bool
      */
     public static function wildCardComparison($text,$textWithWildcard) {
-        if(($textWithWildcard===null && $textWithWildcard==='') 
-            || $textWithWildcard==='**' 
+        if(($textWithWildcard===null && $textWithWildcard==='')
             || strpos($textWithWildcard,'*')===false) {
             // if the text with wildcard is null or empty or it contains two ** or it contains no * then..
             return $text==$textWithWildcard;
+        }
+        if ($textWithWildcard === '*' || $textWithWildcard === '**') {
+            return true;
         }
         $c0=$textWithWildcard[0];
         $c1=substr($textWithWildcard, -1);
