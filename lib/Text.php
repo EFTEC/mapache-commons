@@ -6,12 +6,13 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.14 2020-feb-12
+ * @version   1.16 2020-06-06
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
  */
-class Text {
+class Text
+{
 
     /**
      * Returns true if the str is (completelly) uppercase
@@ -105,13 +106,13 @@ class Text {
                 return false;
             }
             foreach ($start as $k => $v) {
-                if (substr($txt, 0, 1) === $v && substr($txt, -1) === $end[$k]) {
-                    return substr($txt, 1, strlen($txt) - 2);
+                if ($txt[0] === $v && substr($txt, -1) === $end[$k]) {
+                    return substr($txt, 1, -1);
                 }
             }
         } else {
-            if (substr($txt, 0, 1) === $start && substr($txt, -1) === $end) {
-                return substr($txt, 1, strlen($txt) - 2);
+            if ($txt[0] === $start && substr($txt, -1) === $end) {
+                return substr($txt, 1, -1);
             }
         }
         return $txt;
@@ -152,19 +153,18 @@ class Text {
             $offset = $ini + $len;
             return substr_replace($haystack, $replaceText, $ini, $len);
 
-        } else {
-            $ini += strlen($startNeedle);
-            $len = $p1 - $ini;
-            $offset = $ini + $len;
-            return substr_replace($haystack, $replaceText, $ini, $len);
         }
 
+        $ini += strlen($startNeedle);
+        $len = $p1 - $ini;
+        $offset = $ini + $len;
+        return substr_replace($haystack, $replaceText, $ini, $len);
     }
 
     /**
      * Remove the first character(s) for a string
      *
-     * @param string $str The input text
+     * @param string $str    The input text
      * @param int    $length The amount of characters to remove
      *
      * @return bool|string
@@ -176,7 +176,7 @@ class Text {
     /**
      * Remove the last character(s) for a string
      *
-     * @param string $str The input text
+     * @param string $str    The input text
      * @param int    $length The amount of characters to remove
      *
      * @return bool|string
@@ -215,14 +215,14 @@ class Text {
     /**
      * It returns the first non-space position inside a string.
      *
-     * @param string $str    input string
-     * @param int    $offset offset position
+     * @param string $str      input string
+     * @param int    $offset   offset position
      * @param string $charlist list of characters considered as space
      *
      * @return int the position of the first non-space
      */
-    public static function strPosNotSpace($str, $offset = 0, $charlist=" \t\n\r\0\x0B") {
-        $txtTmp = substr($str, 0, $offset) . ltrim(substr($str, $offset),$charlist);
+    public static function strPosNotSpace($str, $offset = 0, $charlist = " \t\n\r\0\x0B") {
+        $txtTmp = substr($str, 0, $offset) . ltrim(substr($str, $offset), $charlist);
         return strlen($str) - strlen($txtTmp) + $offset;
     }
 
@@ -259,6 +259,7 @@ class Text {
     /**
      * It transforms a text = 'a1=1,a2=2' into an associative array<br/>
      * It uses the method parse_str() to do the conversion<br/>
+     * <b>Note:<b> It doesn't work with quotes or double quotes. a1="aa,bb",bb=30 doesn't work
      *
      * @param string $text      The input string with the initial values
      * @param string $separator The separator
@@ -268,7 +269,7 @@ class Text {
     public static function parseArg($text, $separator = ',') {
         $tmpToken = '¶|¶';
         $output = [];
-        if ($separator == '&') {
+        if ($separator === '&') {
             parse_str($text, $output);
             return $output;
         }
@@ -278,6 +279,54 @@ class Text {
             $k = str_replace($tmpToken, '&', $k);
         }
         return $output;
+    }
+
+    /**
+     * It's the same than parseArg() but it's x3 times slower.<br>
+     * It also considers quotes and doubles quotes.<br>
+     * Example:
+     * <pre>
+     * Text::parseArg2("a1=1,a2=2,a3="aa,bb"); // ["a1"=>1,"a2"=>2,"a3"=>""aa,bb""]
+     * Text::parseArg("a1=1,a2=2,a3="aa,bb"); // ["a1"=>1,"a2"=>2,"a3"=>""aa","bb""=>""]
+     * </pre>
+     *
+     * @param string $text      The input string with the initial values
+     * @param string $separator The separator. It does not separates text inside quotes or double-quotes.
+     *
+     * @return array An associative array
+     */
+    public static function parseArg2($text, $separator = ',') {
+
+        $chars = str_split($text);
+        $parts = [];
+        $nextpart = "";
+        $strL = count($chars);
+        for ($i = 0; $i < $strL; $i++) {
+            $char = $chars[$i];
+            if ($char === '"' || $char === "'") {
+                $inext = strpos($text, $char, $i + 1);
+                $inext = $inext === false ? $strL : $inext;
+                $nextpart .= substr($text, $i, $inext - $i + 1);
+                $i = $inext;
+            } else {
+                $nextpart .= $char;
+            }
+            if ($char === $separator) {
+                $parts[] = substr($nextpart, 0, -1);
+                $nextpart = "";
+            }
+        }
+        if (strlen($nextpart) > 0) {
+            $parts[] = $nextpart;
+        }
+        $result = [];
+        foreach ($parts as $part) {
+            $r = explode('=', $part, 2);
+            if (count($r) == 2) {
+                $result[trim($r[0])] = trim($r[1]);
+            }
+        }
+        return $result;
     }
 
     /**
@@ -321,12 +370,79 @@ class Text {
         }
         // validation
         foreach ($result as $k => $item) {
-            if ($separators[$k] == 'req' && $result[$k] === null) {
+            if ($separators[$k] === 'req' && $result[$k] === null) {
                 // it misses one required value.
                 return null;
             }
         }
         return $result;
+    }
+
+    /**
+     * It compares with wildcards (*) and returns true if both strings are equals<br>
+     * The wildcards only works at the beginning or at the end of the string.<br>
+     * <b>Example:<b><br>
+     * <pre>
+     * Text::wildCardComparison('abcdef','abc*'); // true
+     * Text::wildCardComparison('abcdef','*def'); // true
+     * Text::wildCardComparison('abcdef','*abc*'); // true
+     * Text::wildCardComparison('abcdef','*cde*'); // true
+     * Text::wildCardComparison('abcdef','*cde'); // false
+     *
+     * </pre>
+     * 
+     * @param string $text
+     * @param string|null $textWithWildcard
+     *
+     * @return bool
+     */
+    public static function wildCardComparison($text,$textWithWildcard) {
+        if(($textWithWildcard===null && $textWithWildcard==='') 
+            || $textWithWildcard==='**' 
+            || strpos($textWithWildcard,'*')===false) {
+            // if the text with wildcard is null or empty or it contains two ** or it contains no * then..
+            return $text==$textWithWildcard;
+        }
+        $c0=$textWithWildcard[0];
+        $c1=substr($textWithWildcard, -1);
+        $textWithWildcardClean=str_replace('*','',$textWithWildcard);
+        $p0=strpos($text,$textWithWildcardClean);
+        if($p0===false) {
+            // no matches.
+            return false;
+        }
+        if($c0==='*' && $c1==='*') {
+            // $textWithWildcard='*asasasas*'
+            return true;
+        } 
+        if($c1==='*') {
+            // $textWithWildcard='asasasas*'
+            return $p0===0;
+        }
+        // $textWithWildcard='*asasasas'
+        return static::endsWith($text,$textWithWildcardClean);
+        
+    }
+
+    /**
+     * it returns true if $string ends with $endString<br>
+     * <b>Example:<b><br>
+     * <pre>
+     * Text::endsWidth('hello world','world'); // true
+     * </pre>
+     * 
+     * @param $string
+     * @param $endString
+     *
+     * @return bool
+     */
+    public static function endsWith($string, $endString)
+    {
+        $len = strlen($endString);
+        if ($len == 0) {
+            return true;
+        }
+        return (substr($string, -$len) === $endString);
     }
 
     /**
@@ -336,23 +452,27 @@ class Text {
      *      replaceCurlyVariable('hello={{var}}',['varx'=>'world']) // hello=<br>
      *      replaceCurlyVariable('hello={{var}}',['varx'=>'world'],true) // hello={{var}}<br>
      *
-     * @param string $string The input value. It could contains variables defined as {{namevar}}
-     * @param array  $values The dictionary of values.
-     * @param bool $notFoundThenKeep [false] If true and the value is not found, then it keeps the value.
-     *                               Otherwise, it is replaced by an empty value
+     * @param string $string           The input value. It could contains variables defined as {{namevar}}
+     * @param array  $values           The dictionary of values.
+     * @param bool   $notFoundThenKeep [false] If true and the value is not found, then it keeps the value.
+     *                                 Otherwise, it is replaced by an empty value
      *
      * @return string|string[]|null
      */
-    public static function replaceCurlyVariable($string,$values,$notFoundThenKeep=false) {
-        if(strpos($string,'{{')===false) return $string; // nothing to replace.
-        return preg_replace_callback('/{{\s?(\w+)\s?}}/u', function ($matches) use ($values,$notFoundThenKeep) {
+    public static function replaceCurlyVariable($string, $values, $notFoundThenKeep = false) {
+        if (strpos($string, '{{') === false) {
+            return $string;
+        } // nothing to replace.
+        return preg_replace_callback('/{{\s?(\w+)\s?}}/u', function ($matches) use ($values, $notFoundThenKeep) {
             if (is_array($matches)) {
-                $item = substr($matches[0], 2, strlen($matches[0]) - 4); // removes {{ and }}
-                return isset($values[$item])? $values[$item] : ($notFoundThenKeep?$matches[0]:'') ;
-            } else {
-                $item = substr($matches, 2, strlen($matches) - 4); // removes {{ and }}
-                return isset($values[$item])? $values[$item] : ($notFoundThenKeep?$matches:'') ;
+                $item = substr($matches[0], 2, -2); // removes {{ and }}
+                /** @noinspection NullCoalescingOperatorCanBeUsedInspection */
+                return isset($values[$item]) ? $values[$item] : ($notFoundThenKeep ? $matches[0] : '');
             }
+
+            $item = substr($matches, 2, -2); // removes {{ and }}
+            /** @noinspection NullCoalescingOperatorCanBeUsedInspection */
+            return isset($values[$item]) ? $values[$item] : ($notFoundThenKeep ? $matches : '');
         }, $string);
     }
 
@@ -390,12 +510,12 @@ class Text {
                 return false;
             }
             foreach ($start as $k => $v) {
-                if (substr($txt, 0, 1) === $v && substr($txt, -1) === $end[$k]) {
+                if ($txt[0] === $v && substr($txt, -1) === $end[$k]) {
                     return true;
                 }
             }
         } else {
-            if (substr($txt, 0, 1) === $start && substr($txt, -1) === $end) {
+            if ($txt[0] === $start && substr($txt, -1) === $end) {
                 return true;
             }
         }
@@ -422,8 +542,8 @@ class Text {
             $l = strlen($txt);
             for ($i = 0; $i < $l; $i++) {
                 $c = $txt[$i];
-                if ($c == '_' || $c == ' ') {
-                    if($i!=$l-1) {
+                if ($c === '_' || $c === ' ') {
+                    if ($i != $l - 1) {
                         $result .= strtoupper($txt[$i + 1]);
                         $i++;
                     } else {
@@ -434,10 +554,9 @@ class Text {
                 }
             }
             return $result;
-        } else {
-            // the text is simple.
-            return strtolower(substr($txt, 0, 1)) . substr($txt, 1);
         }
 
+// the text is simple.
+        return strtolower($txt[0]) . substr($txt, 1);
     }
 }

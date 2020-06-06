@@ -68,6 +68,14 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2,Text::strPosNotSpace(" \nabc"));
         $this->assertEquals(1,Text::strPosNotSpace(" \nabc",0," "));
 	}
+	public function testWildCard() {
+	    $this->assertEquals(true,Text::wildCardComparison('abcdef','abc*'));
+        $this->assertEquals(true,Text::wildCardComparison('abcdef','*def'));
+        $this->assertEquals(true,Text::wildCardComparison('abcdef','*abc*'));
+        $this->assertEquals(false,Text::wildCardComparison('abcdef','1abc*'));
+        $this->assertEquals(false,Text::wildCardComparison('abcdef','*1def'));
+        $this->assertEquals(false,Text::wildCardComparison('abcdef','*1abc*'));        
+    }
 	public function testReplaceBetween()
 	{
 		$this->assertEquals("Hello Wayne World",Text::replaceBetween('Hello Brave World','Hello','World',' Wayne '));
@@ -88,6 +96,13 @@ class TextTest extends \PHPUnit\Framework\TestCase
     public function testparseArg() {
         $this->assertEquals(['a'=>'1','b'=>'2'],Text::parseArg('a=1,b=2'));
         $this->assertEquals(['a'=>'1','b'=>'2'],Text::parseArg('a=1&b=2','&'));
+        $txt="a1=1,a2=2,a3='a1,bb'";
+        $this->assertEquals([
+                                'a1'=>'1'
+                                ,'a2'=>'2'
+                                ,'a3'=>"'a1"
+                                ,"bb'"=>''],Text::parseArg($txt));
+        $this->assertEquals(['a1'=>'1','a2'=>'2','a3'=>"'a1,bb'"],Text::parseArg2($txt));        
     }
     public function testReplaceCurlyVariable() {
 	    $this->assertEquals('hello=world',Text::replaceCurlyVariable('hello={{var}}',['var'=>'world']));
