@@ -6,7 +6,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.16 2020-06-06
+ * @version   1.17 2020-06-06
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -376,6 +376,20 @@ class Text
             }
         }
         return $result;
+    }
+
+    /**
+     * It works as str_replace but it also allows to limit the number of replacements.
+     * 
+     * @param string $search
+     * @param string $replace
+     * @param string $subject
+     * @param int $limit
+     *
+     * @return string
+     */
+    public static function str_replace_ex($search, $replace, $subject,$limit=99999) {
+        return implode($replace, explode($search, $subject, $limit+1));
     }
 
     /**

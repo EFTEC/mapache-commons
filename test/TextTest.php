@@ -69,7 +69,9 @@ class TextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(1,Text::strPosNotSpace(" \nabc",0," "));
 	}
 	public function testWildCard() {
+        $this->assertEquals('def_abc',Text::str_replace_ex('abc','','abcdef_abc',1));
         $this->assertEquals(true,Text::wildCardComparison('abcdef','*'));
+        $this->assertEquals(true,Text::wildCardComparison('abcdef','a*'));
 	    $this->assertEquals(true,Text::wildCardComparison('abcdef','abc*'));
         $this->assertEquals(true,Text::wildCardComparison('abcdef','*def'));
         $this->assertEquals(true,Text::wildCardComparison('abcdef','*abc*'));

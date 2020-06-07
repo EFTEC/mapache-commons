@@ -379,6 +379,7 @@ Text::addParenthesis('(hello)');
 
 ## Version list
 
+* 1.17 New Method Text::str_replace_ex()
 * 1.16 New methods Text::wildcardComparison() and Text::endsWith()   
 * 1.15 New method Text::parseArg2()
 * 1.14 Text::camelCase() solved a small bug  
