@@ -1,4 +1,5 @@
 <?php
+/** @noinspection ReturnTypeCanBeDeclaredInspection */
 
 namespace mapache_commons;
 
@@ -110,10 +111,8 @@ class Text
                     return substr($txt, 1, -1);
                 }
             }
-        } else {
-            if ($txt[0] === $start && substr($txt, -1) === $end) {
-                return substr($txt, 1, -1);
-            }
+        } elseif ($txt[0] === $start && substr($txt, -1) === $end) {
+            return substr($txt, 1, -1);
         }
         return $txt;
     }
@@ -301,6 +300,7 @@ class Text
         $parts = [];
         $nextpart = "";
         $strL = count($chars);
+        /** @noinspection ForeachInvariantsInspection */
         for ($i = 0; $i < $strL; $i++) {
             $char = $chars[$i];
             if ($char === '"' || $char === "'") {
@@ -316,7 +316,7 @@ class Text
                 $nextpart = "";
             }
         }
-        if (strlen($nextpart) > 0) {
+        if ($nextpart !== '') {
             $parts[] = $nextpart;
         }
         $result = [];
@@ -348,9 +348,9 @@ class Text
     public static function naturalArg($txt, $separators) {
         $keySeparator = array_keys($separators);
         $result = array_flip($keySeparator);
-        $firstKey = array_search('first', $separators);
-        foreach ($result as &$v) {
-            $v = null;
+        $firstKey = array_search('first', $separators, true);
+        foreach ($result as $k=>$v) {
+            $result[$k] = null;
         }
         if (!$txt) {
             return $result;
@@ -364,6 +364,7 @@ class Text
             $initial = 0; // it does not have a initial value
         }
         for ($i = $initial; $i < $c; $i += 2) {
+            /** @noinspection TypeUnsafeArraySearchInspection */
             if (in_array($txtArr[$i], $keySeparator)) {
                 $result[$txtArr[$i]] = @$txtArr[$i + 1];
             }
@@ -479,16 +480,17 @@ class Text
         if (strpos($string, '{{') === false) {
             return $string;
         } // nothing to replace.
-        return preg_replace_callback('/{{\s?(\w+)\s?}}/u', function ($matches) use ($values, $notFoundThenKeep) {
+        return preg_replace_callback('/{{\s?(\w+)\s?}}/u', static function ($matches) use ($values, $notFoundThenKeep) {
             if (is_array($matches)) {
                 $item = substr($matches[0], 2, -2); // removes {{ and }}
+                /** @noinspection NestedTernaryOperatorInspection */
                 /** @noinspection NullCoalescingOperatorCanBeUsedInspection */
                 return isset($values[$item]) ? $values[$item] : ($notFoundThenKeep ? $matches[0] : '');
             }
 
             $item = substr($matches, 2, -2); // removes {{ and }}
-            /** @noinspection NullCoalescingOperatorCanBeUsedInspection */
-            return isset($values[$item]) ? $values[$item] : ($notFoundThenKeep ? $matches : '');
+ 
+            return $values[$item] ?? $notFoundThenKeep ? $matches : '';
         }, $string);
     }
 
@@ -530,10 +532,8 @@ class Text
                     return true;
                 }
             }
-        } else {
-            if ($txt[0] === $start && substr($txt, -1) === $end) {
-                return true;
-            }
+        } elseif ($txt[0] === $start && substr($txt, -1) === $end) {
+            return true;
         }
         return false;
     }

@@ -1,4 +1,9 @@
-<?php /** @noinspection BadExpressionStatementJS */
+<?php
+/** @noinspection UnknownInspectionInspection */
+
+/** @noinspection ReturnTypeCanBeDeclaredInspection */
+
+/** @noinspection BadExpressionStatementJS */
 
 namespace mapache_commons;
 
@@ -53,7 +58,7 @@ class Debug {
      *
      * @param mixed  $logFile
      * @param mixed  $level
-     * @param string $txt if txt is empty then level is defined as warning and level is used for the description
+     * @param string|object|array $txt if txt is empty then level is defined as warning and level is used for the description
      *
      * @return bool
      */
@@ -73,15 +78,14 @@ class Debug {
         }
         if ($fz > 10000000) {
             // max de 10mb
-            $fp = @fopen($logFile, 'w');
+            $fp = @fopen($logFile, 'wb');
         } else {
-            $fp = @fopen($logFile, 'a');
+            $fp = @fopen($logFile, 'ab');
         }
         if (!$fp) {
             return false;
         }
-        $txtW = str_replace("\r\n", " ", $txtW);
-        $txtW = str_replace("\n", " ", $txtW);
+        $txtW = str_replace(array("\r\n", "\n"), " ", $txtW);
         $r = true;
         try {
             $now = new DateTime();

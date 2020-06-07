@@ -1,4 +1,7 @@
-<?php /** @noinspection DuplicatedCode */
+<?php
+/** @noinspection ReturnTypeCanBeDeclaredInspection */
+
+/** @noinspection DuplicatedCode */
 
 namespace mapache_commons;
 
@@ -58,7 +61,7 @@ class Collection {
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
      */
     public static function arrayKeyLower($array) {
-        return array_map(function ($item) {
+        return array_map(static function ($item) {
             if (is_array($item)) {
                 $item = self::arrayKeyLower($item);
             }
@@ -75,7 +78,7 @@ class Collection {
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
      */
     public static function arrayKeyUpper($array) {
-        return array_map(function ($item) {
+        return array_map(static function ($item) {
             if (is_array($item)) {
                 $item = self::arrayKeyUpper($item);
             }
@@ -206,12 +209,12 @@ class Collection {
             }
         }
         if ($excludeEmpty) {
-            return array_values(array_filter($result, function ($value) {
+            return array_values(array_filter($result, static function ($value) {
                 return $value !== "";
             })); // array_values for rebuild the index (array_filter deletes items but not reindex
-        } else {
-            return $result;
         }
+
+        return $result;
     }
 
     /**
@@ -253,7 +256,7 @@ class Collection {
                     $p0 = $p1 + $sL;
                 } else {
                     // the next separator is a string
-                    $pc = substr($text, $ptxt, 1); // " or '
+                    $pc = $text[$ptxt]; // " or '
                     $even = true;
                     $p0 = $ptxt + 1;
                 }
@@ -271,12 +274,12 @@ class Collection {
             }
         }
         if ($excludeEmpty) {
-            return array_values(array_filter($result, function ($value) {
+            return array_values(array_filter($result, static function ($value) {
                 return $value !== "";
             }));
-        } else {
-            return $result;
         }
+
+        return $result;
     }
 
     /**
@@ -292,7 +295,7 @@ class Collection {
      * @see https://www.php.net/manual/en/function.array-change-key-case.php
      */
     public static function arrayChangeKeyCaseRecursive($array, $case = CASE_LOWER) {
-        return array_map(function ($item) {
+        return array_map(static function ($item) {
             if (is_array($item)) {
                 $item = self::arrayChangeKeyCaseRecursive($item);
             }
@@ -327,9 +330,9 @@ class Collection {
             }
             if ($returnAll) {
                 return $result;
-            } else {
-                return false;
             }
+
+            return false;
         }
         if (is_array($first)) {
             foreach ($array as $k => $v) {
@@ -343,9 +346,9 @@ class Collection {
             }
             if ($returnAll) {
                 return $result;
-            } else {
-                return false;
             }
+
+            return false;
         }
         return false;
     }
