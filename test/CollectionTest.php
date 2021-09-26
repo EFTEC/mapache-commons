@@ -9,6 +9,8 @@ class CollectionTest extends TestCase
 {
 	public function testsplitOpeningClosing()
 	{
+        $this->assertEquals(['a','B-C-D','e','F-G-H']
+            , Collection::splitOpeningClosing("a(B-C-D)e(F-G-H)"));
 		$this->assertEquals(['a','B,C,D','e','F,G,H']
 			, Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)"));
         $this->assertEquals(['a','(B,C,D)','e','(F,G,H)']

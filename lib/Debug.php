@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMissingParamTypeInspection */
+/** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection UnknownInspectionInspection */
 
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
@@ -14,7 +15,7 @@ use Exception;
  * Class Debug
  *
  * @package   mapache_commons
- * @version   1.6 2019-dic.-4 8:38 p. m. 
+ * @version   1.19 2021-09-026
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -32,6 +33,7 @@ class Debug {
     public static function var_dump($value, $type = 1, $returnValue = false) {
         switch ($type) {
             case 1:
+                /** @noinspection JSVoidFunctionReturnValueUsed */
                 $txt = "<script>console.log(" . json_encode($value) . ");</script>";
                 break;
             case 2:

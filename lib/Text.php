@@ -1,4 +1,6 @@
-<?php
+<?php /** @noinspection PhpMissingReturnTypeInspection */
+/** @noinspection PhpMissingParamTypeInspection */
+
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
 
 namespace mapache_commons;
@@ -7,7 +9,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.17 2020-06-06
+ * @version   1.19 2021-09-026
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -129,7 +131,7 @@ class Text
      * @param null|int $offset      the offset position to start the search.
      * @param bool     $replaceTag  If true then it also replaces the tags
      *
-     * @return bool|mixed
+     * @return array|false|string|string[]
      */
     public static function replaceBetween(
         $haystack,
@@ -371,7 +373,7 @@ class Text
         }
         // validation
         foreach ($result as $k => $item) {
-            if ($separators[$k] === 'req' && $result[$k] === null) {
+            if ($separators[$k] === 'req' && $item === null) {
                 // it misses one required value.
                 return null;
             }
@@ -412,7 +414,7 @@ class Text
      * @return bool
      */
     public static function wildCardComparison($text,$textWithWildcard) {
-        if(($textWithWildcard===null && $textWithWildcard==='')
+        if(($textWithWildcard===null || $textWithWildcard==='')
             || strpos($textWithWildcard,'*')===false) {
             // if the text with wildcard is null or empty or it contains two ** or it contains no * then..
             return $text==$textWithWildcard;
@@ -485,6 +487,7 @@ class Text
                 $item = substr($matches[0], 2, -2); // removes {{ and }}
                 /** @noinspection NestedTernaryOperatorInspection */
                 /** @noinspection NullCoalescingOperatorCanBeUsedInspection */
+                /** @noinspection PhpIssetCanBeReplacedWithCoalesceInspection */
                 return isset($values[$item]) ? $values[$item] : ($notFoundThenKeep ? $matches[0] : '');
             }
 

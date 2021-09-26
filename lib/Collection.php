@@ -1,4 +1,5 @@
-<?php
+<?php /** @noinspection PhpMissingParamTypeInspection */
+/** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
 
 /** @noinspection DuplicatedCode */
@@ -9,7 +10,7 @@ namespace mapache_commons;
  * Class Collection
  *
  * @package   mapache_commons
- * @version   1.12 2019-dec-26
+ * @version   1.19 2021-09-026
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -44,7 +45,7 @@ class Collection {
      *
      * @param array $array input array
      *
-     * @return mixed
+     * @return int|string|null
      * @see  https://stackoverflow.com/questions/1921421/get-the-first-element-of-an-array
      */
     public static function firstKey($array) {
@@ -135,9 +136,9 @@ class Collection {
         $html .= '</tr></thead>';
 
         // data rows
-        foreach ($array as $key => $value) {
+        foreach ($array as $value) {
             $html .= '<tr >';
-            foreach ($value as $key2 => $value2) {
+            foreach ($value as $value2) {
                 if (is_array($value2)) {
                     $html .= '<td >' . self::generateTable($value2) . '</td>';
                 } else {
@@ -186,7 +187,7 @@ class Collection {
         $result = [];
         // starting.
         $even = false;
-        while ($p0 !== false) {
+        while (true) {
             if (!$even) {
                 $p1 = strpos($text, $openingTag, $p0);
                 if ($p1 === false) {
