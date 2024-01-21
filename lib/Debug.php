@@ -10,12 +10,13 @@ namespace mapache_commons;
 
 use DateTime;
 use Exception;
+use JsonException;
 
 /**
  * Class Debug
  *
  * @package   mapache_commons
- * @version   1.19 2021-09-026
+ * @version   1.20 2024-01-21
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -27,14 +28,15 @@ class Debug {
      * @param bool $returnValue
      *
      * @return string|void
-     * @see https://stackoverflow.com/questions/10116063/making-php-var-dump-values-display-one-line-per-value
+     * @throws JsonException
+     * @see          https://stackoverflow.com/questions/10116063/making-php-var-dump-values-display-one-line-per-value
      * @noinspection JSUnnecessarySemicolon
      */
     public static function var_dump($value, $type = 1, $returnValue = false) {
         switch ($type) {
             case 1:
                 /** @noinspection JSVoidFunctionReturnValueUsed */
-                $txt = "<script>console.log(" . json_encode($value) . ");</script>";
+                $txt = "<script>console.log(" . json_encode($value, JSON_THROW_ON_ERROR) . ");</script>";
                 break;
             case 2:
                 $txt = "<pre>";
@@ -65,6 +67,7 @@ class Debug {
      * @return bool
      */
     public static function WriteLog($logFile, $level, $txt = '') {
+        /** @noinspection TypeUnsafeComparisonInspection */
         if ($logFile == '') {
             return false;
         }

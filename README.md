@@ -9,24 +9,50 @@ It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is
 [![php](https://img.shields.io/badge/php-7.x-green.svg)]()
 [![CocoaPods](https://img.shields.io/badge/docs-70%25-yellow.svg)]()
 
-- [Mapache Commons](#mapache-commons)
+<!-- TOC -->
+* [Mapache Commons](#mapache-commons)
   * [Goals](#goals)
   * [Families](#families)
   * [Collection](#collection)
-    + [isAssoc($array)](#isassoc--array-)
-    + [first($array)](#first--array-)
-    + [firstKey($array)](#firstkey--array-)
-    + [arrayKeyLower($arr)](#arraykeylower--arr-)
-    + [arrayKeyUpper($arr)](#arraykeyupper--arr-)
-    + [generateTable($array,$css=true)](#generatetable--array--css-true-)
+    * [splitOpeningClosing](#splitopeningclosing)
+    * [splitNotString](#splitnotstring)
+    * [xmlToArray](#xmltoarray)
+    * [stringToXML](#stringtoxml)
+    * [arrayToXML](#arraytoxml)
+    * [xmlToString](#xmltostring)
+    * [arrayChangeKeyCaseRecursive](#arraychangekeycaserecursive)
+    * [arraySearchField](#arraysearchfield)
+    * [isAssoc](#isassoc)
+    * [first](#first)
+    * [firstKey](#firstkey)
+    * [arrayKeyLower](#arraykeylower)
+    * [arrayKeyUpper](#arraykeyupper-)
+    * [generateTable](#generatetable-)
   * [Debug](#debug)
-    + [var_dump($value,$console=false)](#var-dump--value--console-false-)
-    + [WriteLog($logFile,$txt)](#writelog--logfile--txt-)
+    * [var_dump](#var_dump)
+    * [WriteLog](#writelog)
   * [Text](#text)
-    + [isUpper($str)](#isupper--str-)
-    + [isLower($str)](#islower--str-)
+    * [getArgument()](#getargument)
+    * [strPosNotSpace()](#strposnotspace)
+    * [isUpper](#isupper-)
+    * [isLower](#islower)
+    * [stripQuotes](#stripquotes)
+    * [between](#between)
+    * [replaceBetween](#replacebetween-)
+    * [removeFirstChars](#removefirstchars-)
+    * [removeLastChars](#removelastchars-)
+    * [parseArg](#parsearg)
+    * [naturalArg](#naturalarg)
+    * [camelCase](#camelcase)
+    * [strposArray](#strposarray)
+    * [removeParenthesis](#removeparenthesis)
+    * [hasParenthesis](#hasparenthesis)
+    * [addParenthesis](#addparenthesis)
   * [Version list](#version-list)
   * [License](#license)
+<!-- TOC -->
+
+
 
 ![Mapache Commons](docs/raccoon_small.png)  
 __Mapache Commons__
@@ -36,8 +62,8 @@ __Mapache Commons__
 It's a set of useful function with the next requirements:
 * The function mustn't have dependencies (unless it requires a php module).  
 * The function must be FAST and memory friendly over the syntax sugar.
-* The function must be able to run statically and it must be self contained.
-* The function must be generic and it must solve generic problems.  For example, a function that calculates the VAT of a specific country is not allowed.  
+* The function must be able to run statically, and it must be self-contained.
+* The function must be generic, and it must solve generic problems.  For example, a function that calculates the VAT of a specific country is not allowed.  
 
 ## Families
 * Collection
@@ -73,6 +99,34 @@ Split a string by ignoring parts of string where values are between " or '.
 Collection::splitNotString('a,b,"CC,D,E",e,f' , ",");
 // returns ['a' , 'b' , 'CC,D,E' , 'e' , 'f']
 ```
+
+### xmlToArray
+It converts a xml (SimpleXMLElement object) into an array.
+```php
+$array=Collection::xmlToArray($xml);
+```
+
+### stringToXML
+It converts a string into a xml using simplexml_load_string
+
+```php
+$xml=Collection::stringToXML('<root><item arg="1">a</item><item arg="2">b</item></root>');
+```
+
+### arrayToXML
+It convers an array into a xml (SimpleXMLElement object)
+```php
+$xml=Collection::arrayToXML($array,'root'); // <root>...</root>
+```
+
+### xmlToString
+It converts a xml (SimpleXMLElement object) into a string
+```php
+$string=Collection::xmlToString($xml,true); // "<root>...</root>"
+```
+
+
+
 
 ### arrayChangeKeyCaseRecursive
 
@@ -285,11 +339,11 @@ A "natural string", it is a set of values or arguments separated by space
 > naturalArg($text, $separator = ',')
 
 * $text the input expression
-* $separator is a associative array where the key is the key of the
+* $separator is an associative array where the key is the key of the
  end result, and the value of each key is 
    * first = first value. This value is the first of the string expression
    * req = required value. If the value is missing then it returns null
-   * opt = optional value. If the value is missing the the field returns null
+   * opt = optional value. If the value is missing then the field returns null
 
 ```php
 Text::naturalArg('select * from table where 1=1'
@@ -316,7 +370,7 @@ Text::camelCase('hello_world');
 
 ### strposArray
 
-It find the first (or last) ocurrence of a text.
+It finds the first (or last) ocurrence of a text.
 Unlikely strpos(), this method allows to find more than one neddle.
 
 > function strposArray($haystack, $needles,$offset=0,$last=false)
@@ -378,7 +432,7 @@ Text::addParenthesis('(hello)');
 
 
 ## Version list
-
+* 1.20 New methods Collection::xmlToString,Collection::arrayToXML,Collection::stringToXML,Collection::xmlToArray
 * 1.17 New Method Text::str_replace_ex()
 * 1.16 New methods Text::wildcardComparison() and Text::endsWith()   
 * 1.15 New method Text::parseArg2()
@@ -391,7 +445,7 @@ Text::addParenthesis('(hello)');
 * 1.10
     * Text::strPosNotSpace() added argument $charlist
 * 1.9 2019-12-09
-    * Text::replacetext() it does not crashes if the end tag is missing.
+    * Text::replacetext() it does not crash if the end tag is missing.
     * Text::replacetext() it as a new argument
 * 1.8 2019-12-04
     * Text::between() now allows empty $startNeedle and $endNeedle

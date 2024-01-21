@@ -1,4 +1,7 @@
-<?php /** @noinspection PhpMissingReturnTypeInspection */
+<?php /** @noinspection UnknownInspectionInspection */
+/** @noinspection TypeUnsafeComparisonInspection */
+/** @noinspection GrazieInspection */
+/** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection PhpMissingParamTypeInspection */
 
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
@@ -9,7 +12,7 @@ namespace mapache_commons;
  * Class Text
  *
  * @package   mapache_commons
- * @version   1.19 2021-09-026
+ * @version   1.20 2024-01-21
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -80,7 +83,7 @@ class Text
     }
 
     /**
-     * Strip quotes of a text (" or ')
+     * Strip quotes of a text " or '
      *
      * @param $text
      *
@@ -195,7 +198,7 @@ class Text
      * @param string $set The separator of operator
      * @param bool   $trimValue
      *
-     * @return array it always returns a two dimensional array. It could returns [null,null] or ['arg',null]
+     * @return array it always returns a two-dimensional array. It could return [null,null] or ['arg',null]
      */
     public static function getArgument($str, $set = '=', $trimValue = true) {
         if (empty($str)) {
@@ -228,8 +231,8 @@ class Text
     }
 
     /**
-     * It find the first (or last) ocurrence of a text.<br>
-     * Unlikely strpos(), this method allows to find more than one neddle.
+     * It finds the first (or last) ocurrence of a text.<br>
+     * Unlikely strpos(), this method allows finding more than one neddle.
      *
      * @param string       $haystack the input value
      * @param string|array $needles  the value (or values) to find
@@ -286,10 +289,10 @@ class Text
      * It's the same than parseArg() but it's x3 times slower.<br>
      * It also considers quotes and doubles quotes.<br>
      * Example:
-     * <pre>
+     * ```php
      * Text::parseArg2("a1=1,a2=2,a3="aa,bb"); // ["a1"=>1,"a2"=>2,"a3"=>""aa,bb""]
      * Text::parseArg("a1=1,a2=2,a3="aa,bb"); // ["a1"=>1,"a2"=>2,"a3"=>""aa","bb""=>""]
-     * </pre>
+     * ```
      *
      * @param string $text      The input string with the initial values
      * @param string $separator The separator. It does not separates text inside quotes or double-quotes.
@@ -382,8 +385,8 @@ class Text
     }
 
     /**
-     * It works as str_replace but it also allows to limit the number of replacements.
-     * 
+     * It works as str_replace, but it also allows to limit the number of replacements.
+     *
      * @param string $search
      * @param string $replace
      * @param string $subject
@@ -399,15 +402,15 @@ class Text
      * It compares with wildcards (*) and returns true if both strings are equals<br>
      * The wildcards only works at the beginning or at the end of the string.<br>
      * <b>Example:<b><br>
-     * <pre>
+     * ```php
      * Text::wildCardComparison('abcdef','abc*'); // true
      * Text::wildCardComparison('abcdef','*def'); // true
      * Text::wildCardComparison('abcdef','*abc*'); // true
      * Text::wildCardComparison('abcdef','*cde*'); // true
      * Text::wildCardComparison('abcdef','*cde'); // false
      *
-     * </pre>
-     * 
+     * ```
+     *
      * @param string $text
      * @param string|null $textWithWildcard
      *
@@ -416,7 +419,7 @@ class Text
     public static function wildCardComparison($text,$textWithWildcard) {
         if(($textWithWildcard===null || $textWithWildcard==='')
             || strpos($textWithWildcard,'*')===false) {
-            // if the text with wildcard is null or empty or it contains two ** or it contains no * then..
+            // if the text with wildcard is null or empty, or it contains two ** or it contains no * then..
             return $text==$textWithWildcard;
         }
         if ($textWithWildcard === '*' || $textWithWildcard === '**') {
@@ -433,23 +436,23 @@ class Text
         if($c0==='*' && $c1==='*') {
             // $textWithWildcard='*asasasas*'
             return true;
-        } 
+        }
         if($c1==='*') {
             // $textWithWildcard='asasasas*'
             return $p0===0;
         }
         // $textWithWildcard='*asasasas'
         return static::endsWith($text,$textWithWildcardClean);
-        
+
     }
 
     /**
      * it returns true if $string ends with $endString<br>
      * <b>Example:<b><br>
-     * <pre>
+     * ```php
      * Text::endsWidth('hello world','world'); // true
-     * </pre>
-     * 
+     * ```
+     *
      * @param $string
      * @param $endString
      *
@@ -471,7 +474,7 @@ class Text
      *      replaceCurlyVariable('hello={{var}}',['varx'=>'world']) // hello=<br>
      *      replaceCurlyVariable('hello={{var}}',['varx'=>'world'],true) // hello={{var}}<br>
      *
-     * @param string $string           The input value. It could contains variables defined as {{namevar}}
+     * @param string $string           The input value. It could contain variables defined as {{namevar}}
      * @param array  $values           The dictionary of values.
      * @param bool   $notFoundThenKeep [false] If true and the value is not found, then it keeps the value.
      *                                 Otherwise, it is replaced by an empty value
@@ -492,13 +495,13 @@ class Text
             }
 
             $item = substr($matches, 2, -2); // removes {{ and }}
- 
+
             return $values[$item] ?? $notFoundThenKeep ? $matches : '';
         }, $string);
     }
 
     /**
-     * It adds an parenthesis (or other symbol) at the start and end of the text. If it already has it, then it is not added.
+     * It adds a parenthesis (or other symbol) at the start and end of the text. If it already has it, then it is not added.
      *
      * @param string       $txt   Input value. Example "hello", "(hello)"
      * @param string|array $start the open parenthesis, by default it's '('.
@@ -543,7 +546,7 @@ class Text
 
     /**
      * Retains the case minus the first letter that it's converted in lowercase<br>
-     * If the text contains the characters "_" or " ", then it the next character is uppercase<br>
+     * If the text contains the characters "_" or " ", then the next character is uppercase<br>
      * If the text does not contain any character "_" or " ", then only the first character is replaced.
      *
      * @param string $txt input value
@@ -555,7 +558,7 @@ class Text
             return $txt;
         }
 
-        if (strpos($txt, '_') != false || strpos($txt, ' ') != false) {
+        if (strpos($txt, '_') || strpos($txt, ' ')) {
             $txt = strtolower($txt);
             $result = '';
             $l = strlen($txt);
