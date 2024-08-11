@@ -15,7 +15,7 @@ use SimpleXMLElement;
  * Class Collection
  *
  * @package   mapache_commons
- * @version   1.20 2024-01-21
+ * @version   1.21 2024-08-10
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons

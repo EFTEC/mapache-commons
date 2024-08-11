@@ -48,6 +48,7 @@ It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is
     * [removeParenthesis](#removeparenthesis)
     * [hasParenthesis](#hasparenthesis)
     * [addParenthesis](#addparenthesis)
+  * [FileLib](#filelib)
   * [Version list](#version-list)
   * [License](#license)
 <!-- TOC -->
@@ -431,7 +432,21 @@ Text::addParenthesis('(hello)');
 ```
 
 
+## FileLib
+> Todo: missing documentation, check the phpdoc for more information.
+
 ## Version list
+* 1.21 added FileLib class
+  * getDirFiles()
+  * getDirFolders()
+  * getExtensionPath()
+  * getDirPath()
+  * getBaseNamePath()
+  * getFileNamePath()
+  * fixUrlSeparator()
+  * safeFileGetContent()
+  * safeFilePutContent()
+  * isAbsolutePath()
 * 1.20 New methods Collection::xmlToString,Collection::arrayToXML,Collection::stringToXML,Collection::xmlToArray
 * 1.17 New Method Text::str_replace_ex()
 * 1.16 New methods Text::wildcardComparison() and Text::endsWith()   
