@@ -1,6 +1,6 @@
 <?php
 
-use mapache_commons\Debug;
+use mapache_commons\DebugLib;
 use PHPUnit\Framework\TestCase;
 
 class DebugTest extends TestCase
@@ -17,13 +17,13 @@ class DebugTest extends TestCase
 
 	public function testWriteLog()
 	{
-		$this->assertEquals(true,Debug::WriteLog($this->logFile,"error","Hello Brave World"));
+		$this->assertEquals(true,DebugLib::WriteLog($this->logFile,"error","Hello Brave World"));
 		$this->assertEquals(true,file_exists($this->logFile));
 	}
 
 	public function testVar_dump()
 	{
-		$this->assertEquals('<script>console.log(["a","b"]);</script>',Debug::var_dump(['a','b'],1,true));
-		$this->assertEquals("<pre>Array\n(\n    [0] => a\n    [1] => b\n)\n</pre>",Debug::var_dump(['a','b'],2,true));
+		$this->assertEquals('<script>console.log(["a","b"]);</script>',DebugLib::var_dump(['a','b'],1,true));
+		$this->assertEquals("<pre>Array\n(\n    [0] => a\n    [1] => b\n)\n</pre>",DebugLib::var_dump(['a','b'],2,true));
 	}
 }

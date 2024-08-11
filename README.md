@@ -97,33 +97,33 @@ Split a string by ignoring parts of string where values are between " or '.
 > splitNotString($text,$separator,[$offset=0],[$excludeEmpty=true])
 
 ```php
-Collection::splitNotString('a,b,"CC,D,E",e,f' , ",");
+CollectionLib::splitNotString('a,b,"CC,D,E",e,f' , ",");
 // returns ['a' , 'b' , 'CC,D,E' , 'e' , 'f']
 ```
 
 ### xmlToArray
 It converts a xml (SimpleXMLElement object) into an array.
 ```php
-$array=Collection::xmlToArray($xml);
+$array=CollectionLib::xmlToArray($xml);
 ```
 
 ### stringToXML
 It converts a string into a xml using simplexml_load_string
 
 ```php
-$xml=Collection::stringToXML('<root><item arg="1">a</item><item arg="2">b</item></root>');
+$xml=CollectionLib::stringToXML('<root><item arg="1">a</item><item arg="2">b</item></root>');
 ```
 
 ### arrayToXML
 It convers an array into a xml (SimpleXMLElement object)
 ```php
-$xml=Collection::arrayToXML($array,'root'); // <root>...</root>
+$xml=CollectionLib::arrayToXML($array,'root'); // <root>...</root>
 ```
 
 ### xmlToString
 It converts a xml (SimpleXMLElement object) into a string
 ```php
-$string=Collection::xmlToString($xml,true); // "<root>...</root>"
+$string=CollectionLib::xmlToString($xml,true); // "<root>...</root>"
 ```
 
 
@@ -137,9 +137,9 @@ It changes the case (to lower or upper case) of the keys of an array recursively
 
 ```php
 $arr=['A'=>'a','b'=>'b'];
-Collection::arrayChangeKeyCaseRecursive($arr);
+CollectionLib::arrayChangeKeyCaseRecursive($arr);
 // returns ['a'=>'a','b'=>'b']
-Collection::arrayChangeKeyCaseRecursive($arr,true);
+CollectionLib::arrayChangeKeyCaseRecursive($arr,true);
 // returns ['A'=>'a','B'=>'b']
 ```
 ### arraySearchField
@@ -163,14 +163,14 @@ $key=arraySearchField($array,'name','mary');
 > arraySearchField($array,$fieldName,$value)
 
 ```php
-Collection::arraySearchField(
+CollectionLib::arraySearchField(
     [['name'=>'john'],['name'=>'mary']],'name','mary');
 // returns 1
 
-Collection::arraySearchField(
+CollectionLib::arraySearchField(
     [(object)['name'=>'john'],(object)['name'=>'mary']],'name','mary');
 // returns 1
-Collection::arraySearchField(
+CollectionLib::arraySearchField(
     [['name'=>'john'],['name'=>'mary'],['name'=>'mary']],'name','mary',true);
 // returns [1,2]
               
@@ -234,24 +234,24 @@ It's a class with a collection of functions related with strings.
 
 ### getArgument()
 
-> Text::getArgument($txt,[$set='='],[$trimValue=true])
+> TextLib::getArgument($txt,[$set='='],[$trimValue=true])
 
 Returns an array with the name of the argument and value (if any). It always returns a two dimension array
 
-> Example Text::getArgument('alpha=hello')
+> Example TextLib::getArgument('alpha=hello')
 > ['alpha','hello']
 
-> Example Text::getArgument('alpha:hello',':')
+> Example TextLib::getArgument('alpha:hello',':')
 > ['alpha','hello']
 
 ### strPosNotSpace()
 
-> Text::strPosNotSpace($txt,[$offset=0])
+> TextLib::strPosNotSpace($txt,[$offset=0])
 
 Returns the first position of a string that it's not a space
 
 ```php
-Text::strPosNotSpace('   abc  def');
+TextLib::strPosNotSpace('   abc  def');
 // returns 3
 
 ```
@@ -276,7 +276,7 @@ Strip quotes of a text (" or ')
 
 Example:
 ```php
-Text::stripQuotes('"hello world"');
+TextLib::stripQuotes('"hello world"');
 // returns hello world
 ```
 
@@ -290,7 +290,7 @@ Text::stripQuotes('"hello world"');
 
 Returns the text between two needles.
 
-> Text::between('Hello Brave World','Hello','World')  // returns " Brave "
+> TextLib::between('Hello Brave World','Hello','World')  // returns " Brave "
 
 ### replaceBetween 
 
@@ -299,7 +299,7 @@ Returns the text between two needles.
 Replace the text between two needles
 * If $replaceTag is true then it also replaces the $startNeedle and $endneedle
 
-> Text::replaceBetween('Hello Brave World','Hello','World',' Wayne ') // returns "Hello Wayne World"
+> TextLib::replaceBetween('Hello Brave World','Hello','World',' Wayne ') // returns "Hello Wayne World"
 
 
 
@@ -309,7 +309,7 @@ Replace the text between two needles
 
 Remove the first character(s) for a string
 
-> Text::removeFirstChars('Hello') // returns "ello"
+> TextLib::removeFirstChars('Hello') // returns "ello"
 
 ### removeLastChars 
 
@@ -317,7 +317,7 @@ Remove the first character(s) for a string
 
 Remove the last character(s) for a string
 
-> Text::removeLastChars('Hello') // returns "Hell"
+> TextLib::removeLastChars('Hello') // returns "Hell"
 
 ### parseArg
 
@@ -327,7 +327,7 @@ It uses the method parse_str() to do the conversion
 > parseArg($text, $separator = ',')
 
 ```php
-Text::parseArg('a=1,b=1');
+TextLib::parseArg('a=1,b=1');
 // returns ['a'=>'1','b'=>'1']
 ```
 
@@ -347,11 +347,11 @@ A "natural string", it is a set of values or arguments separated by space
    * opt = optional value. If the value is missing then the field returns null
 
 ```php
-Text::naturalArg('select * from table where 1=1'
+TextLib::naturalArg('select * from table where 1=1'
                 ,['select'=>'req','from'=>'req','where'=>'opt']);
 // returns ['select'=>'*','from'=>'table','where'=>'1=1']
 
-Text::naturalArg('item export table inport file'
+TextLib::naturalArg('item export table inport file'
                 ,['item'=>'first','export'=>'opt','inport'=>'opt']);
 // returns: ['item' => 'item', 'export' => 'table', 'inport' => 'file']
 ```
@@ -362,9 +362,9 @@ Retains the case of the text minus the first letter that it's converted in lower
 
 Example:
 ```php
-Text::camelCase('HelloWorld');
+TextLib::camelCase('HelloWorld');
 // return "helloWorld";
-Text::camelCase('hello_world');
+TextLib::camelCase('hello_world');
 // return "helloWorld";
 
 ```
@@ -378,9 +378,9 @@ Unlikely strpos(), this method allows to find more than one neddle.
 
 Example:
 ```php
-Text::strposArray('a,b.d.e,f.g',['x','t','.']);
+TextLib::strposArray('a,b.d.e,f.g',['x','t','.']);
 // return 3
-Text::strposArray('a,b.d.e,f.g',['x','t',','],0,true);
+TextLib::strposArray('a,b.d.e,f.g',['x','t',','],0,true);
 // return 7
 ```
 
@@ -391,15 +391,15 @@ If the **$start** and **$end** arguments are arrays then both must have the same
 
 Example:
 ```php
-Text::removeParenthesis('hello');
+TextLib::removeParenthesis('hello');
 // return "hello";
-Text::removeParenthesis('(hello)');
+TextLib::removeParenthesis('(hello)');
 // return "hello";
-Text::removeParenthesis('[hello]'
+TextLib::removeParenthesis('[hello]'
     ,['(','{','[']
     ,[')','}',']']);
 // returns "hello"
-Text::removeParenthesis("'hello'"
+TextLib::removeParenthesis("'hello'"
     ,"'"
     ,"'");
 // returns "hello"
@@ -412,9 +412,9 @@ Returns true if it has both parenthesis.
 
 Example:
 ```php
-Text::hasParenthesis('hello');
+TextLib::hasParenthesis('hello');
 // return false;
-Text::hasParenthesis('(hello)');
+TextLib::hasParenthesis('(hello)');
 // return true;
 ```
 
@@ -425,9 +425,9 @@ It adds parenthesis only if the original input does not have it.
 
 Example:
 ```php
-Text::addParenthesis('hello');
+TextLib::addParenthesis('hello');
 // return '(hello)';
-Text::addParenthesis('(hello)');
+TextLib::addParenthesis('(hello)');
 // return '(hello)';
 ```
 
@@ -436,6 +436,13 @@ Text::addParenthesis('(hello)');
 > Todo: missing documentation, check the phpdoc for more information.
 
 ## Version list
+* 1.22 The next classes have been renamed:
+  * Text (deprecated) => TextLib
+  * Collection (deprecated)  => CollectionLib
+  * Debug (deprecated) => DebugLib
+  * It is because there are a dozen of libraries who use the same name for the classes.   
+  * **You can still use the same library without changes** but for new code I suggest to use the new names.
+  * [next] FileLib::getDirFirstFile()
 * 1.21 added FileLib class
   * getDirFiles()
   * getDirFolders()
@@ -447,40 +454,40 @@ Text::addParenthesis('(hello)');
   * safeFileGetContent()
   * safeFilePutContent()
   * isAbsolutePath()
-* 1.20 New methods Collection::xmlToString,Collection::arrayToXML,Collection::stringToXML,Collection::xmlToArray
-* 1.17 New Method Text::str_replace_ex()
-* 1.16 New methods Text::wildcardComparison() and Text::endsWith()   
-* 1.15 New method Text::parseArg2()
-* 1.14 Text::camelCase() solved a small bug  
-* 1.13 Text::replaceCurlyVariable() updated
+* 1.20 New methods CollectionLib::xmlToString,CollectionLib::arrayToXML,CollectionLib::stringToXML,CollectionLib::xmlToArray
+* 1.17 New Method TextLib::str_replace_ex()
+* 1.16 New methods TextLib::wildcardComparison() and TextLib::endsWith()   
+* 1.15 New method TextLib::parseArg2()
+* 1.14 TextLib::camelCase() solved a small bug  
+* 1.13 TextLib::replaceCurlyVariable() updated
 * 1.12
     * Collection:splitOpeningClosing added argument $includeTag
 * 1.11
-    * Text::replaceCurlyVariable Added method
+    * TextLib::replaceCurlyVariable Added method
 * 1.10
-    * Text::strPosNotSpace() added argument $charlist
+    * TextLib::strPosNotSpace() added argument $charlist
 * 1.9 2019-12-09
-    * Text::replacetext() it does not crash if the end tag is missing.
-    * Text::replacetext() it as a new argument
+    * TextLib::replacetext() it does not crash if the end tag is missing.
+    * TextLib::replacetext() it as a new argument
 * 1.8 2019-12-04
-    * Text::between() now allows empty $startNeedle and $endNeedle
+    * TextLib::between() now allows empty $startNeedle and $endNeedle
 * 1.7 2019-12-04 new methods
-    * Text::addParenthesis()
-    * Text::hasParenthesis()
+    * TextLib::addParenthesis()
+    * TextLib::hasParenthesis()
 * 1.6 2019-12-04 new methods
-    * Text::parseArg()
-    * Text::naturalArg()
-    * Text::strposArray()
-    * Text::camelCase()
-    * Text::removeParenthesis()
-    * Collection::arrayChangeKeyCaseRecursive()
-    * Collection::arraySearchField()
+    * TextLib::parseArg()
+    * TextLib::naturalArg()
+    * TextLib::strposArray()
+    * TextLib::camelCase()
+    * TextLib::removeParenthesis()
+    * CollectionLib::arrayChangeKeyCaseRecursive()
+    * CollectionLib::arraySearchField()
 * 1.5 2019-03-10 new functions:  
    Collection:splitOpeningClosing()  
-   Text::strPosNotSpace()  
-   Text::getArgument()  
-   Collection::splitNotString()  
-* 1.4 2019-02-16 New functions Text::removeFirstChars(),Text::removeLastChars()
+   TextLib::strPosNotSpace()  
+   TextLib::getArgument()  
+   CollectionLib::splitNotString()  
+* 1.4 2019-02-16 New functions TextLib::removeFirstChars(),TextLib::removeLastChars()
 * 1.3 2019-02-16 Added new methods and Unit test.
 * 1.2 2018-10-27 Some changes in the class collection.
 * 1.0 2018-09-18 First version  

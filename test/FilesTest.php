@@ -15,6 +15,9 @@ class FilesTest extends TestCase
             FileLib::fixUrlSeparator($dir.'/testfile/one/file2.txt'),
             FileLib::fixUrlSeparator($dir.'/testfile/one/two/file1.txt'),
         ],$contents);
+        $content2=FileLib::getDirFirstFile($dir.'/testfile',['doc','txt']);
+        $this->assertEquals(
+            FileLib::fixUrlSeparator($dir.'/testfile/file4.doc'),$content2);
         $folders=FileLib::getDirFolders($dir.'/testfile');
         $this->assertEquals([
             FileLib::fixUrlSeparator($dir.'/testfile/one'),

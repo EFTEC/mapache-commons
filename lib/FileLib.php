@@ -9,7 +9,7 @@ use Throwable;
  * This class has a collection of functions to interact with files and directories.
  *
  * @package   mapache_commons
- * @version   1.21 2024-08-10
+ * @version   1.22 2024-08-10
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -27,6 +27,39 @@ class FileLib
     {
         $result = [];
         return self::_getDirFiles($dir, $result, $extensions, $recursive);
+    }
+
+    /**
+     * It returns the first file (exclude directories) find in a directory that matches a specific extension(s)<br>
+     * The order of the extensions could count.<br>
+     * If there are two files with the same extension, then it returns the first one.
+     * @param string $dir        The directory to scan.
+     * @param array  $extensions The extension to find (without dot). ['*'] means any extension.
+     * @param bool   $sort       (default false), if true then it sorts the list previous the filter.
+     * @param bool   $descending (default false), if true then it sorts (if enable) descending.
+     * @return string|null The full name of the file or null if it is not found.
+     */
+    public static function getDirFirstFile(string $dir, array $extensions = ['*'],bool $sort=false,$descending=false): ?string
+    {
+        $files = scandir($dir);
+        if($sort) {
+            $files=natcasesort($files);
+        }
+        if($descending && $sort) {
+            $files=array_reverse($files);
+        }
+        foreach ($extensions as $ext) {
+            foreach ($files as $value) {
+                $fullName = realpath($dir . DIRECTORY_SEPARATOR . $value);
+                $extension = self::getExtensionPath($fullName);
+                if (!is_dir($fullName)) {
+                    if ($extension === $ext || $ext === '*') {
+                        return $fullName;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
     protected static function _getDirFiles(string $dir, array &$results = [], array $extensions = ['*'], bool $recursive = true): array

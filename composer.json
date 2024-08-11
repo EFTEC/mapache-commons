@@ -24,7 +24,8 @@
         "mapache_commons\\": "lib/"
       }
     },
-  "require": {
+    "require": {
+    "php": ">=7.4",
     "ext-json": "*",
     "ext-simplexml": "*",
     "ext-dom": "*"
