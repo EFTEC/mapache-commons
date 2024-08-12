@@ -3,3 +3,6 @@
 /.gitignore         export-ignore
 /.travis.yml        export-ignore
 /phpunit.xml        export-ignore
+/docs               export-ignore
+/examples           export-ignore
+/test               export-ignore

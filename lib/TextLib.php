@@ -12,7 +12,7 @@ namespace mapache_commons;
  * Class TextLib
  *
  * @package   mapache_commons
- * @version   1.22 2024-08-10
+ * @version   1.23 2024-08-12
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons

@@ -5,8 +5,8 @@ It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is
 [![Packagist](https://img.shields.io/packagist/v/eftec/mapache-commons.svg)](https://packagist.org/packages/eftec/mapache-commons)
 [![Maintenance](https://img.shields.io/maintenance/yes/2024.svg)]()
 [![composer](https://img.shields.io/badge/composer-%3E1.6-blue.svg)]()
-[![php](https://img.shields.io/badge/php->5.6-green.svg)]()
-[![php](https://img.shields.io/badge/php-7.x-green.svg)]()
+[![php](https://img.shields.io/badge/php-7.4-green.svg)]()
+[![php](https://img.shields.io/badge/php-8.*-green.svg)]()
 [![CocoaPods](https://img.shields.io/badge/docs-70%25-yellow.svg)]()
 
 <!-- TOC -->
@@ -436,13 +436,14 @@ TextLib::addParenthesis('(hello)');
 > Todo: missing documentation, check the phpdoc for more information.
 
 ## Version list
+* 1.23 Modified .gitattributes and .gitignore to streamline the final version.
 * 1.22 The next classes have been renamed:
   * Text (deprecated) => TextLib
   * Collection (deprecated)  => CollectionLib
   * Debug (deprecated) => DebugLib
   * It is because there are a dozen of libraries who use the same name for the classes.   
   * **You can still use the same library without changes** but for new code I suggest to use the new names.
-  * [next] FileLib::getDirFirstFile()
+  * [new] FileLib::getDirFirstFile()
 * 1.21 added FileLib class
   * getDirFiles()
   * getDirFolders()
