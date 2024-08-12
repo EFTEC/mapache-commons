@@ -1,7 +1,6 @@
 # Mapache Commons
 It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is "raccoon")
 
-[![Build Status](https://travis-ci.org/EFTEC/mapache-commons.svg?branch=master)](https://travis-ci.org/EFTEC/mapache-commons)
 [![Packagist](https://img.shields.io/packagist/v/eftec/mapache-commons.svg)](https://packagist.org/packages/eftec/mapache-commons)
 [![Maintenance](https://img.shields.io/maintenance/yes/2024.svg)]()
 [![composer](https://img.shields.io/badge/composer-%3E1.6-blue.svg)]()
