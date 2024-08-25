@@ -12,7 +12,7 @@ use SimpleXMLElement;
  * Class CollectionLib
  *
  * @package   mapache_commons
- * @version   1.23 2024-08-12
+ * @version   1.24 2024-08-24
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -20,20 +20,33 @@ use SimpleXMLElement;
 class CollectionLib
 {
     /**
-     * Returns true if array is an associative array, false is it's an indexed array
+     * Returns true if array is an associative array, false is it's an indexed array<br>
+     * **Example:**
+     * ```
+     * $isAssoc=CollectionLib::isAssoc($array); // slow, more precise.
+     * $isAssoc=CollectionLib::isAssoc($array,true); // fast, less precise
+     * ```
      *
      * @param array $array input array
+     * @param bool  $fast (default false), if true then it checks if the index 0 exists, and it is the first index.<br>
+     *                    if false, then it checks every value comparing the indexed array with an associative array.
      *
      * @return bool
      * @see https://stackoverflow.com/questions/173400/how-to-check-if-php-array-is-associative-or-sequential
      */
-    public static function isAssoc($array): bool
+    public static function isAssoc(array $array,bool $fast=false): bool
     {
+        if($fast){
+            return !(isset($array[0]) && array_key_first($array) ===0);
+        }
         return (array_values($array) !== $array);
     }
 
+
     /**
-     * Returns the first element of an array.
+     * Returns the first element of an array.<br>
+     * Sometimes the first element is not the index [0], for example ['key1'=>1,0=2] where the first element is 'key1' and not 0.
+     * This function always returns the right value.
      *
      * @param array $array input array
      *
@@ -161,14 +174,16 @@ class CollectionLib
     }
 
     /**
-     * Split a string using an opening and closing tag.<br/>
+     * Split a string using an opening and closing tag, by default "(" and ")".<br/>
      * Example:<br/>
-     * Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)"); // ['a','B,C,D','e','F,G,H']<br/>
-     * Collection::splitOpeningClosing("a(B,C,D)e(F,G,H)i"); // ['a','B,C,D','e','F,G,H','i'] <br>
+     * ```
+     * CollectionLib::splitOpeningClosing("a(B,C,D)e(F,G,H)"); // ['a','B,C,D','e','F,G,H']
+     * CollectionLib::splitOpeningClosing("a(B,C,D)e(F,G,H)i"); // ['a','B,C,D','e','F,G,H','i']
+     * ```
      *
      * @param string $text          input text to separated
-     * @param string $openingTag    Opening tag
-     * @param string $closingTag    closing tag
+     * @param string $openingTag    Opening tag, default "("
+     * @param string $closingTag    closing tag, default ")"
      * @param int    $startPosition start position (by default it is zero)
      * @param bool   $excludeEmpty  if true then it excludes all empty values.
      * @param bool   $includeTag    if true then it includes the tag.
@@ -227,7 +242,9 @@ class CollectionLib
     /**
      * Split a string by ignoring parts of string where values are between " or '.<br>
      * Example:<br/>
-     * Collection::splitNotString('a,b,"CC,D,E",e,f' ,","); // ['a','b','CC,D,E','e','f']<br/>
+     * ```
+     * CollectionLib::splitNotString('a,b,"CC,D,E",e,f' ,","); // ['a','b','CC,D,E','e','f']
+     * ```
      *
      * @param string $text input text
      * @param string $separator
@@ -292,8 +309,16 @@ class CollectionLib
     }
 
     /**
-     * It changes the case (to lower or upper case) of the keys of an array recursively
-     *
+     * It changes the case (to lower or upper case) of the keys of an array recursively<br>
+     * **Example:**
+     * ```
+     * $arr=['A'=>'a','b'=>'b'];
+     * CollectionLib::arrayChangeKeyCaseRecursive($arr);
+     * // returns ['a'=>'a','b'=>'b']
+     * CollectionLib::arrayChangeKeyCaseRecursive($arr,true);
+     * // returns ['A'=>'a','B'=>'b']
+     * ```
+ *
      * @param array $array input array
      *
      * @param int   $case  [optional] by default is CASE_LOWER <p>
@@ -315,7 +340,13 @@ class CollectionLib
 
     /**
      * It returns the first (or all) key(s) inside an array/object in an array that matches the value of the field<br>
-     * Example: arraySearchField([['name'=>'john'],['name'=>'mary']],'name','mary'); // returns 1
+     * **Example:**
+     * ```
+     * $array=[['name'=>'john'],['name'=>'mary']];
+     * CollectionLib::arraySearchField($array,'name','mary'); // 1
+     * CollectionLib::arraySearchField([(object)['name'=>'john'],(object)['name'=>'mary']],'name','mary'); // 1
+     * CollectionLib::arraySearchField([['name'=>'john'],['name'=>'mary'],['name'=>'mary']],'name','mary',true); // returns [1,2]
+     * ```
      *
      * @param array      $array     input array
      * @param string|int $fieldName name of index of the field
@@ -365,9 +396,9 @@ class CollectionLib
 
     /**
      * It converts a xml (SimpleXMLElement object) into a string<br>
-     **Example:**
-     * ```php
-     * $string=Collection::xmlToString($xml,true); // "<root>...</root>"
+     * **Example:**
+     * ```
+     * $string=CollectionLib::xmlToString($xml,true); // "<root>...</root>"
      * ```
      * @param SimpleXMLElement $xml
      * @param bool             $format if true then the result is formatted.
@@ -388,8 +419,8 @@ class CollectionLib
     /**
      * It convers an array into a xml (SimpleXMLElement object)
      * **Example:**
-     * ```php
-     * $xml=Collection::arrayToXML($array,'root'); // <root>...</root>
+     * ```
+     * $xml=CollectionLib::arrayToXML($array,'root'); // <root>...</root>
      * ```
      * @param array  $data
      * @param string $rootName The name of the root tag (default root)
@@ -464,8 +495,8 @@ class CollectionLib
     /**
      * It converts a string into a xml (SimpleXMLElement object) using simplexml_load_string including a fix<br>
      * **Example:**
-     * ```php
-     * $xml=Collection::stringToXML('<root><item arg="1">a</item><item arg="2">b</item></root>');
+     * ```
+     * $xml=CollectionLib::stringToXML('<root><item arg="1">a</item><item arg="2">b</item></root>');
      * ```
      *
      * @param string $string  the value to convert
@@ -483,7 +514,11 @@ class CollectionLib
     }
 
     /**
-     * It converts a xml (SimpleXMLElement object) into an array.
+     * It converts an XML class (SimpleXMLElement object) into an array.
+     * **Example:**
+     * ```
+     * $array=CollectionLib::xmlToArray($xml);
+     * ```
      * @param SimpleXMLElement $xml
      * @return array|null
      * @throws JsonException

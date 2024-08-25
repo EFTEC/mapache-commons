@@ -66,8 +66,8 @@ class CollectionTest extends TestCase
         $this->assertInstanceOf('SimpleXMLElement',$xmlBack);
         $this->assertEquals('<?xml version="1.0"?>'."\n".'<root><item arg="1">a</item><item arg="2">b</item></root>'."\n",$stringBack);
     }
-	public function testsplitOpeningClosing()
-	{
+	public function testsplitOpeningClosing(): void
+    {
         $this->assertEquals(['a','B-C-D','e','F-G-H']
             , CollectionLib::splitOpeningClosing("a(B-C-D)e(F-G-H)"));
 		$this->assertEquals(['a','B,C,D','e','F,G,H']
@@ -93,8 +93,8 @@ class CollectionTest extends TestCase
         $this->assertEquals([1,2]
             ,CollectionLib::arraySearchField([['name'=>'john'],['name'=>'mary'],['name'=>'mary']],'name','mary',true));
 	}
-	public function testsplitNotString()
-	{
+	public function testsplitNotString(): void
+    {
 		$this->assertEquals(['a' , 'b' , 'CC,D,E' , 'e' , 'f']
 			, CollectionLib::splitNotString('a,b,"CC,D,E",e,f',","));
 
@@ -102,11 +102,15 @@ class CollectionTest extends TestCase
 			, CollectionLib::splitNotString('a b "CC D E" e f'," ",0,false));
 	}
 
-	public function testisAssoc() {
+	public function testisAssoc(): void
+    {
 	    $this->assertEquals(false,CollectionLib::isAssoc(['a','b']));
+        $this->assertEquals(false,CollectionLib::isAssoc(['a','b'],true));
         $this->assertEquals(true,CollectionLib::isAssoc(['a'=>'a','b'=>'b']));
+        $this->assertEquals(true,CollectionLib::isAssoc(['a'=>'a','b'=>'b'],true));
     }
-    public function testarrayChangeKeyCaseRecursive() {
+    public function testarrayChangeKeyCaseRecursive(): void
+    {
 	    $arr=['A'=>'a','b'=>'b'];
 	    $this->assertEquals(['a'=>'a','b'=>'b'],CollectionLib::arrayChangeKeyCaseRecursive($arr));
         $this->assertEquals(['A'=>'a','B'=>'b'],CollectionLib::arrayChangeKeyCaseRecursive($arr,CASE_UPPER));

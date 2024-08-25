@@ -3,23 +3,20 @@
 /** @noinspection GrazieInspection */
 /** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection PhpMissingParamTypeInspection */
-
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
 
 namespace mapache_commons;
-
 /**
  * Class TextLib
  *
  * @package   mapache_commons
- * @version   1.23 2024-08-12
+ * @version   1.24 2024-08-24
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
  */
 class TextLib
 {
-
     /**
      * Returns true if the str is (completelly) uppercase
      *
@@ -28,7 +25,8 @@ class TextLib
      * @return bool true if the text is uppercase, otherwise false
      * @see https://stackoverflow.com/questions/4211875/check-if-a-string-is-all-caps-in-php
      */
-    public static function isUpper($str) {
+    public static function isUpper($str)
+    {
         return strtoupper($str) == $str;
     }
 
@@ -40,14 +38,18 @@ class TextLib
      * @return bool
      * @see https://stackoverflow.com/questions/25340288/php-function-to-check-string-if-is-all-lowercase
      */
-    public static function isLower($str) {
+    public static function isLower($str)
+    {
         return strtolower($str) == $str;
     }
 
     /**
      * Obtain a string between one text and other.
-     * Example: between('mary has a lamb','has','lamb') // returns ' a '
-     *
+     * **Example:**
+     * ```
+     * TextLib::between('Hello Brave World','Hello','World');  // returns " Brave "
+     * TextLib::between('mary has a lamb','has','lamb') // returns ' a '
+     * ```
      * @param string   $haystack
      * @param string   $startNeedle The initial text to search<br />
      *                              if empty then it starts at the start of the haystack.
@@ -58,7 +60,8 @@ class TextLib
      *
      * @return bool|string
      */
-    public static function between($haystack, $startNeedle, $endNeedle, &$offset = 0, $ignoreCase = false) {
+    public static function between($haystack, $startNeedle, $endNeedle, &$offset = 0, $ignoreCase = false)
+    {
         if ($startNeedle === '') {
             $ini = 0;
         } else {
@@ -83,19 +86,38 @@ class TextLib
     }
 
     /**
-     * Strip quotes of a text " or '
-     *
+     * Strip quotes of a text " or ' if the value in between quotes<br>
+     * If the value is not quoted then it is not touched.<br>
+     * If the value is not correctly closed ("hello or "hello' ), then the quota is not removed.<br>
+     * The value is trimmed '   "hello world"' --> 'hello world'<br>
+     * **Example:**
+     * ```
+     * TextLib::stripQuotes('"hello world"');
+     * // returns hello world
+     * ```
      * @param $text
      *
      * @return bool|string
      */
-    public static function stripQuotes($text) {
+    public static function stripQuotes($text)
+    {
         return self::removeParenthesis($text, ['"', "'"], ['"', "'"]);
     }
 
     /**
      * Remove the initial and final parenthesis but only if both matches.<br/>
-     * If the $start and $end are arrays then both must have the same count and arrays are compared by pair of index
+     * If the $start and $end are arrays then both must have the same count and arrays are compared by pair of index<br>
+     * **Example:**
+     * ```
+     * TextLib::removeParenthesis('hello'); // return "hello";
+     * TextLib::removeParenthesis('(hello)'); // return "hello";
+     * TextLib::removeParenthesis('[hello]'
+     *      ,['(','{','[']
+     *       ,[')','}',']']); // returns "hello"
+     * TextLib::removeParenthesis("'hello'"
+     *      ,"'"
+     *      ,"'"); // returns "hello"
+     * ```
      *
      * @param string       $txt   Input value. Example "hello", "(hello)"
      * @param string|array $start the open parenthesis, by default it's '('.
@@ -103,7 +125,8 @@ class TextLib
      *
      * @return bool|string The string processed of false if error.
      */
-    public static function removeParenthesis($txt, $start = '(', $end = ')') {
+    public static function removeParenthesis($txt, $start = '(', $end = ')')
+    {
         if ($txt == "") {
             return $txt;
         }
@@ -123,8 +146,11 @@ class TextLib
     }
 
     /**
-     * Replace the text between two needles
-     *
+     * Replace the text between two needles<br>
+     * **Example:**
+     * ```
+     * TextLib::replaceBetween('Hello Brave World','Hello','World',' Wayne ') // returns "Hello Wayne World"
+     * ```
      * @param string   $haystack    the input value
      * @param string   $startNeedle The initial text to search<br />
      *                              if empty then it starts at the start of the haystack.
@@ -143,7 +169,8 @@ class TextLib
         $replaceText,
         &$offset = 0,
         $replaceTag = false
-    ) {
+    )
+    {
         $ini = ($startNeedle === '') ? 0 : strpos($haystack, $startNeedle, $offset);
         if ($ini === false) {
             return false;
@@ -156,9 +183,7 @@ class TextLib
             $len = $p1 + strlen($endNeedle) - $ini;
             $offset = $ini + $len;
             return substr_replace($haystack, $replaceText, $ini, $len);
-
         }
-
         $ini += strlen($startNeedle);
         $len = $p1 - $ini;
         $offset = $ini + $len;
@@ -166,33 +191,47 @@ class TextLib
     }
 
     /**
-     * Remove the first character(s) for a string
+     * Remove the first character(s) for a string<br>
+     * **Example:**
+     * ```
+     * TextLib::removeFirstChars('Hello') // returns "ello"
+     * ```
      *
      * @param string $str    The input text
-     * @param int    $length The amount of characters to remove
+     * @param int    $length The amount of characters to remove (default 1)
      *
      * @return bool|string
      */
-    public static function removeFirstChars($str, $length = 1) {
+    public static function removeFirstChars($str, $length = 1)
+    {
         return substr($str, $length);
     }
 
     /**
-     * Remove the last character(s) for a string
+     * Remove the last character(s) for a string<br>
+     * **Example:**
+     * ```
+     * TextLib::removeLastChars('Hello') // returns "Hell"
+     * ```
      *
      * @param string $str    The input text
-     * @param int    $length The amount of characters to remove
+     * @param int    $length The amount of characters to remove (default 1)
      *
      * @return bool|string
      */
-    public static function removeLastChars($str, $length = 1) {
+    public static function removeLastChars($str, $length = 1)
+    {
         return substr($str, 0, -$length);
     }
 
     /**
-     * It separates an argument from the value to the set value.
-     * Example self::getArgument("arg=200") returns ["arg","200"]
-     * Example self::getArgument("arg:200",':') returns ["arg","200"]
+     * It separates an argument from the value to the set value.<br>
+     * Returns an array with the name of the argument and value (if any). It always returns a two dimension array
+     * **Example:**
+     * ```
+     * self::getArgument("arg=200"); // returns ["arg","200"]
+     * self::getArgument("arg:200",':'); // returns ["arg","200"]
+     * ```
      *
      * @param string $str The input text
      * @param string $set The separator of operator
@@ -200,7 +239,8 @@ class TextLib
      *
      * @return array it always returns a two-dimensional array. It could return [null,null] or ['arg',null]
      */
-    public static function getArgument($str, $set = '=', $trimValue = true) {
+    public static function getArgument($str, $set = '=', $trimValue = true)
+    {
         if (empty($str)) {
             return [null, null];
         }
@@ -212,27 +252,35 @@ class TextLib
         if ($trimValue && $parts[1]) {
             $parts[1] = trim($parts[1]);
         }
-
         return $parts;
     }
 
     /**
      * It returns the first non-space position inside a string.
-     *
+     * **Example:**
+     * ```
+     * TextLib::strPosNotSpace('   abc  def'); // returns 3
+     * ```
      * @param string $str      input string
      * @param int    $offset   offset position
      * @param string $charlist list of characters considered as space
      *
      * @return int the position of the first non-space
      */
-    public static function strPosNotSpace($str, $offset = 0, $charlist = " \t\n\r\0\x0B") {
+    public static function strPosNotSpace($str, $offset = 0, $charlist = " \t\n\r\0\x0B")
+    {
         $txtTmp = substr($str, 0, $offset) . ltrim(substr($str, $offset), $charlist);
         return strlen($str) - strlen($txtTmp) + $offset;
     }
 
     /**
      * It finds the first (or last) ocurrence of a text.<br>
-     * Unlikely strpos(), this method allows finding more than one neddle.
+     * Unlikely strpos(), this method allows finding more than one neddle.<br>
+     * **Example:**
+     * ```
+     * TextLib::strposArray('a,b.d.e,f.g',['x','t','.']); // return 3
+     * TextLib::strposArray('a,b.d.e,f.g',['x','t',','],0,true); // return 7
+     * ```
      *
      * @param string       $haystack the input value
      * @param string|array $needles  the value (or values) to find
@@ -241,7 +289,8 @@ class TextLib
      *
      * @return bool|int if not found then it returns false
      */
-    public static function strposArray($haystack, $needles, $offset = 0, $last = false) {
+    public static function strposArray($haystack, $needles, $offset = 0, $last = false)
+    {
         $min = strlen($haystack);
         if (is_array($needles)) {
             foreach ($needles as $str) {
@@ -263,14 +312,19 @@ class TextLib
     /**
      * It transforms a text = 'a1=1,a2=2' into an associative array<br/>
      * It uses the method parse_str() to do the conversion<br/>
-     * <b>Note:<b> It doesn't work with quotes or double quotes. a1="aa,bb",bb=30 doesn't work
+     * **Note:** It doesn't work with quotes or double quotes. a1="aa,bb",bb=30 doesn't work
+     * **Example:**
+     * ```
+     * TextLib::parseArg('a=1,b=1'); // returns ['a'=>'1','b'=>'1']
+     * ```
      *
      * @param string $text      The input string with the initial values
      * @param string $separator The separator
      *
      * @return array An associative array
      */
-    public static function parseArg($text, $separator = ',') {
+    public static function parseArg($text, $separator = ',')
+    {
         $tmpToken = '¶|¶';
         $output = [];
         if ($separator === '&') {
@@ -289,7 +343,7 @@ class TextLib
      * It's the same than parseArg() but it's x3 times slower.<br>
      * It also considers quotes and doubles quotes.<br>
      * Example:
-     * ```php
+     * ```
      * TextLib::parseArg2("a1=1,a2=2,a3="aa,bb"); // ["a1"=>1,"a2"=>2,"a3"=>""aa,bb""]
      * TextLib::parseArg("a1=1,a2=2,a3="aa,bb"); // ["a1"=>1,"a2"=>2,"a3"=>""aa","bb""=>""]
      * ```
@@ -299,8 +353,8 @@ class TextLib
      *
      * @return array An associative array
      */
-    public static function parseArg2($text, $separator = ',') {
-
+    public static function parseArg2($text, $separator = ',')
+    {
         $chars = str_split($text);
         $parts = [];
         $nextpart = "";
@@ -336,11 +390,16 @@ class TextLib
 
     /**
      * It parses a natural string and returns a declarative array<br>
-     * Example: natural("v1 obj obj1 type type1"<br>
-     *               ,['item'=>'first','obj'=>'opt','type'=>'req'])
-     * returns ['item'=>v1,'obj'=>'obj1','type'=>'type1']<br>
-     * example natural("select * from table where condition"
-     *          ,['select'=>'req','from'=>'req','where'=>'opt']);
+     * A "natural string", it is a set of values or arguments separated by space
+     * , where a value is the index and the new one is the value of the index.
+     * ```
+     * TextLib::naturalArg('select * from table where 1=1'
+     *       ,['select'=>'req','from'=>'req','where'=>'opt']);
+     *       // returns ['select'=>'*','from'=>'table','where'=>'1=1']
+     * TextLib::naturalArg('item export table inport file'
+     *          ,['item'=>'first','export'=>'opt','inport'=>'opt']);
+     *          // returns: ['item' => 'item', 'export' => 'table', 'inport' => 'file']
+     * ```
      *
      * @param string $txt        the input value. Example "somevalue TYPE int LENGHT 30"
      * @param array  $separators the indicator for each field.<br>
@@ -350,11 +409,12 @@ class TextLib
      *
      * @return array|null It returns an associative array or null if the operation fails.
      */
-    public static function naturalArg($txt, $separators) {
+    public static function naturalArg($txt, $separators)
+    {
         $keySeparator = array_keys($separators);
         $result = array_flip($keySeparator);
         $firstKey = array_search('first', $separators, true);
-        foreach ($result as $k=>$v) {
+        foreach ($result as $k => $v) {
             $result[$k] = null;
         }
         if (!$txt) {
@@ -390,19 +450,20 @@ class TextLib
      * @param string $search
      * @param string $replace
      * @param string $subject
-     * @param int $limit
+     * @param int    $limit
      *
      * @return string
      */
-    public static function str_replace_ex($search, $replace, $subject,$limit=99999) {
-        return implode($replace, explode($search, $subject, $limit+1));
+    public static function str_replace_ex($search, $replace, $subject, $limit = 99999)
+    {
+        return implode($replace, explode($search, $subject, $limit + 1));
     }
 
     /**
      * It compares with wildcards (*) and returns true if both strings are equals<br>
      * The wildcards only works at the beginning or at the end of the string.<br>
      * <b>Example:<b><br>
-     * ```php
+     * ```
      * TextLib::wildCardComparison('abcdef','abc*'); // true
      * TextLib::wildCardComparison('abcdef','*def'); // true
      * TextLib::wildCardComparison('abcdef','*abc*'); // true
@@ -411,45 +472,45 @@ class TextLib
      *
      * ```
      *
-     * @param string $text
+     * @param string      $text
      * @param string|null $textWithWildcard
      *
      * @return bool
      */
-    public static function wildCardComparison($text,$textWithWildcard) {
-        if(($textWithWildcard===null || $textWithWildcard==='')
-            || strpos($textWithWildcard,'*')===false) {
+    public static function wildCardComparison($text, $textWithWildcard)
+    {
+        if (($textWithWildcard === null || $textWithWildcard === '')
+            || strpos($textWithWildcard, '*') === false) {
             // if the text with wildcard is null or empty, or it contains two ** or it contains no * then..
-            return $text==$textWithWildcard;
+            return $text == $textWithWildcard;
         }
         if ($textWithWildcard === '*' || $textWithWildcard === '**') {
             return true;
         }
-        $c0=$textWithWildcard[0];
-        $c1=substr($textWithWildcard, -1);
-        $textWithWildcardClean=str_replace('*','',$textWithWildcard);
-        $p0=strpos($text,$textWithWildcardClean);
-        if($p0===false) {
+        $c0 = $textWithWildcard[0];
+        $c1 = substr($textWithWildcard, -1);
+        $textWithWildcardClean = str_replace('*', '', $textWithWildcard);
+        $p0 = strpos($text, $textWithWildcardClean);
+        if ($p0 === false) {
             // no matches.
             return false;
         }
-        if($c0==='*' && $c1==='*') {
+        if ($c0 === '*' && $c1 === '*') {
             // $textWithWildcard='*asasasas*'
             return true;
         }
-        if($c1==='*') {
+        if ($c1 === '*') {
             // $textWithWildcard='asasasas*'
-            return $p0===0;
+            return $p0 === 0;
         }
         // $textWithWildcard='*asasasas'
-        return static::endsWith($text,$textWithWildcardClean);
-
+        return static::endsWith($text, $textWithWildcardClean);
     }
 
     /**
      * it returns true if $string ends with $endString<br>
      * <b>Example:<b><br>
-     * ```php
+     * ```
      * TextLib::endsWidth('hello world','world'); // true
      * ```
      *
@@ -481,11 +542,12 @@ class TextLib
      *
      * @return string|string[]|null
      */
-    public static function replaceCurlyVariable($string, $values, $notFoundThenKeep = false) {
+    public static function replaceCurlyVariable($string, $values, $notFoundThenKeep = false)
+    {
         if (strpos($string, '{{') === false) {
             return $string;
         } // nothing to replace.
-        return preg_replace_callback('/{{\s?(\w+)\s?}}/u', static function ($matches) use ($values, $notFoundThenKeep) {
+        return preg_replace_callback('/{{\s?(\w+)\s?}}/u', static function($matches) use ($values, $notFoundThenKeep) {
             if (is_array($matches)) {
                 $item = substr($matches[0], 2, -2); // removes {{ and }}
                 /** @noinspection NestedTernaryOperatorInspection */
@@ -493,15 +555,19 @@ class TextLib
                 /** @noinspection PhpIssetCanBeReplacedWithCoalesceInspection */
                 return isset($values[$item]) ? $values[$item] : ($notFoundThenKeep ? $matches[0] : '');
             }
-
             $item = substr($matches, 2, -2); // removes {{ and }}
-
             return $values[$item] ?? $notFoundThenKeep ? $matches : '';
         }, $string);
     }
 
     /**
-     * It adds a parenthesis (or other symbol) at the start and end of the text. If it already has it, then it is not added.
+     * It adds a parenthesis (or other symbol) at the start and end of the text.
+     * If it already has it, then it is not added.<br>
+     * **Example:**
+     * ```
+     * TextLib::addParenthesis('hello'); // return '(hello)';
+     * TextLib::addParenthesis('(hello)');// return '(hello)';
+     * ```
      *
      * @param string       $txt   Input value. Example "hello", "(hello)"
      * @param string|array $start the open parenthesis, by default it's '('.
@@ -509,7 +575,8 @@ class TextLib
      *
      * @return string
      */
-    public static function addParenthesis($txt, $start = '(', $end = ')') {
+    public static function addParenthesis($txt, $start = '(', $end = ')')
+    {
         if (self::hasParenthesis($txt, $start, $end) === false) {
             return $start . $txt . $end;
         }
@@ -517,7 +584,12 @@ class TextLib
     }
 
     /**
-     * It returns true if the text has an open and ending parenthesis (or other symbol).
+     * It returns true if the text has an open and ending parenthesis (or other symbol).<br>
+     * **Example:**
+     * ```
+     * TextLib::hasParenthesis('hello'); // return false;
+     * TextLib::hasParenthesis('(hello)'); // return true;
+     * ```
      *
      * @param string       $txt   Input value. Example "hello", "(hello)"
      * @param string|array $start the open parenthesis, by default it's '('.
@@ -525,7 +597,8 @@ class TextLib
      *
      * @return bool
      */
-    public static function hasParenthesis($txt, $start = '(', $end = ')') {
+    public static function hasParenthesis($txt, $start = '(', $end = ')')
+    {
         if ($txt == "") {
             return false;
         }
@@ -548,16 +621,20 @@ class TextLib
      * Retains the case minus the first letter that it's converted in lowercase<br>
      * If the text contains the characters "_" or " ", then the next character is uppercase<br>
      * If the text does not contain any character "_" or " ", then only the first character is replaced.
-     *
+     * **Example:**
+     * ```
+     * TextLib::camelCase('HelloWorld'); // return "helloWorld";
+     * TextLib::camelCase('hello_world'); // return "helloWorld";
+     * ```
      * @param string $txt input value
      *
      * @return string
      */
-    public static function camelCase($txt) {
+    public static function camelCase($txt)
+    {
         if ($txt === null || $txt === '') {
             return $txt;
         }
-
         if (strpos($txt, '_') || strpos($txt, ' ')) {
             $txt = strtolower($txt);
             $result = '';
@@ -577,8 +654,7 @@ class TextLib
             }
             return $result;
         }
-
-// the text is simple.
+        // the text is simple.
         return strtolower($txt[0]) . substr($txt, 1);
     }
 }

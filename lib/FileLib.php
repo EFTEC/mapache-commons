@@ -9,13 +9,17 @@ use Throwable;
  * This class has a collection of functions to interact with files and directories.
  *
  * @package   mapache_commons
- * @version   1.23 2024-08-12
+ * @version   1.24 2024-08-24
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
  */
 class FileLib
 {
+    /**
+     * @var string|null It stores the last error.  This value is nulled every time the operation is called.
+     */
+    public static ?string $lastError = null;
     /**
      * It gets the content (files) of a directory. It does not include other directories.
      * @param string $dir        The directory to scan.
@@ -41,7 +45,12 @@ class FileLib
      */
     public static function getDirFirstFile(string $dir, array $extensions = ['*'],bool $sort=false,$descending=false): ?string
     {
+        self::$lastError=null;
         $files = scandir($dir);
+        if($files===false) {
+            self::$lastError = "Can't read directory '$dir'.";
+            return null;
+        }
         if($sort) {
             $files=natcasesort($files);
         }
@@ -64,7 +73,12 @@ class FileLib
 
     protected static function _getDirFiles(string $dir, array &$results = [], array $extensions = ['*'], bool $recursive = true): array
     {
+        self::$lastError=null;
         $files = scandir($dir);
+        if($files===false) {
+            self::$lastError = "Can't read directory '$dir'.";
+            return [];
+        }
         foreach ($files as $value) {
             $fullName = realpath($dir . DIRECTORY_SEPARATOR . $value);
             $extension = self::getExtensionPath($fullName);
@@ -101,7 +115,12 @@ class FileLib
 
     protected static function _getDirFolders(string $dir, array &$results = [], bool $recursive = true): array
     {
-        $files = scandir($dir);
+        self::$lastError=null;
+        $files =@scandir($dir);
+        if($files===false) {
+            self::$lastError = "Can't read directory '$dir'.";
+            return [];
+        }
         foreach ($files as $value) {
             $fullName = realpath($dir . DIRECTORY_SEPARATOR . $value);
             if ($value !== "." && $value !== ".." && is_dir($fullName)) {
@@ -179,12 +198,17 @@ class FileLib
     public static function safeFileGetContent(string $filename, bool $use_include_path = false, $context = null,
                                               int    $offset = 0, ?int $length = null, $default = null)
     {
+        static::$lastError = null;
         try {
             $content = $length === null ?
-                file_get_contents($filename, $use_include_path, $context, $offset) :
-                file_get_contents($filename, $use_include_path, $context, $offset, $length);
+                @file_get_contents($filename, $use_include_path, $context, $offset) :
+                @file_get_contents($filename, $use_include_path, $context, $offset, $length);
             $content = $content === false ? $default : $content;
+            if($content===false) {
+                static::$lastError="unable to get content file $filename";
+            }
         } catch (Throwable $e) {
+            static::$lastError = $e->getMessage();
             $content = $default;
         }
         return $content;
@@ -203,16 +227,21 @@ class FileLib
     public static function safeFilePutContent(string $filename, $data = "", int $flag = 0,
                                               $context = null, int $tries = 3): bool
     {
+        self::$lastError=null;
+        $msg=null;
         for ($try = 0; $try < $tries; $try++) {
             try {
-                $result = file_put_contents($filename, $data, $flag, $context);
+                $result = @file_put_contents($filename, $data, $flag, $context);
                 if ($result !== false) {
+
                     return true;
                 }
             } catch (Throwable $e) {
+                $msg=$e->getMessage();
             }
             usleep(300);
         }
+        self::$lastError = $msg;
         return false;
     }
 

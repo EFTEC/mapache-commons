@@ -16,13 +16,18 @@ use JsonException;
  * Class Debug
  *
  * @package   mapache_commons
- * @version   1.23 2024-08-12
+ * @version   1.24 2024-08-24
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
  */
 class DebugLib {
     /**
+     * Alternative to var_dump. It "pre" the result or it shows the result in the console of javascript.<br>
+     * **Example:**
+     * ```
+     * DebugLib::var_dump($value,true); // returns a var_dump visible via the console of javascript (browser)
+     * ```
      * @param      $value
      * @param int  $type : 0=normal (<pre>), 1=javascript console, 2=table (use future)
      * @param bool $returnValue
@@ -55,18 +60,17 @@ class DebugLib {
 
     /**
      * Write a log file. If the file is over 10mb then the file is resetted.<br>
-     * <code>
+     * ```
      * DebugLib::WriteLog('somefile.txt','warning','it is a warning');
      * DebugLib::WriteLog('somefile.txt','it is a warning');
-     * </code>
+     * ```
      *
-     * @param mixed  $logFile
-     * @param mixed  $level
+     * @param string  $logFile The file to write
+     * @param mixed  $level The level of the message, example "error", "info", 1, etc.
      * @param string|object|array $txt if txt is empty then level is defined as warning and level is used for the description
-     *
      * @return bool
      */
-    public static function WriteLog($logFile, $level, $txt = '') {
+    public static function WriteLog(string $logFile, $level, $txt = '') {
         /** @noinspection TypeUnsafeComparisonInspection */
         if ($logFile == '') {
             return false;
