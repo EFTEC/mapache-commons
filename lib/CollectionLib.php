@@ -115,12 +115,13 @@ class CollectionLib
      */
     public static function generateTable($array, $css = true): string
     {
-        if (!isset($array[0])) {
+        $first=array_key_first($array);
+        if (!isset($array[$first]) && !is_numeric(array_key_first($array))) {
             $tmp = $array;
             $array = array();
-            $array[0] = $tmp;
+            $array[$first] = $tmp;
         } // create an array with a single element
-        if ($array[0] === null) {
+        if ($array[$first] === null) {
             return "NULL<br>";
         }
         if ($css === true) {
@@ -148,6 +149,14 @@ class CollectionLib
         $html .= '<table class="' . (is_string($css) ? $css : 'generateTable') . '">';
         // header row
         $html .= '<thead><tr>';
+        if(!isset($array[0])) {
+            $firstElement=reset($array);
+            if(is_array($firstElement)) {
+                $array=array_values($array); // convert into a numeric array
+            } else {
+                $array=[$array];
+            }
+        }
         foreach ($array[0] as $key => $value) {
             $html .= '<th>' . htmlspecialchars($key) . '</th>';
         }
@@ -158,7 +167,11 @@ class CollectionLib
             $html .= '<tr>';
             foreach ($value as $value2) {
                 if (is_array($value2)) {
-                    $html .= '<td>' . self::generateTable($value2) . '</td>';
+                    try {
+                        $html .= '<td>' . json_encode($value2, JSON_THROW_ON_ERROR). '</td>';
+                    } catch (JsonException $e) {
+                        $html .= '<td>ERROR ON JSON</td>';
+                    }
                 } else {
                     $html .= '<td>' . htmlspecialchars($value2) . '</td>';
                 }
@@ -318,7 +331,7 @@ class CollectionLib
      * CollectionLib::arrayChangeKeyCaseRecursive($arr,true);
      * // returns ['A'=>'a','B'=>'b']
      * ```
- *
+     *
      * @param array $array input array
      *
      * @param int   $case  [optional] by default is CASE_LOWER <p>
@@ -414,6 +427,54 @@ class CollectionLib
         $dom->formatOutput = true;
         $dom->loadXML($xml->asXML());
         return $dom->saveXML();
+    }
+
+    /**
+     * It fixes an array obtained of an XML.
+     * @param array $array
+     * @param array $fixes
+     * @return array
+     * todo: pendiente, no funciona todavia
+     */
+    public static function fixXMLArray(array $array,array $fixes):array {
+        foreach($fixes as $fix) {
+            $part=explode("/",$fix);
+            switch (count($part)) {
+                case 1:
+                    $level =& $array[$part[0]];
+                    break;
+                case 2:
+                    $level =& $array[$part[0]][$part[1]];
+                    break;
+                case 3:
+                    $level =& $array[$part[0]][$part[1]][$part[2]];
+                    break;
+                case 4:
+                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]];
+                    break;
+                case 5:
+                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]][$part[4]];
+                    break;
+                case 6:
+                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]][$part[4]][$part[5]];
+                    break;
+                case 7:
+                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]][$part[4]][$part[5]][$part[6]];
+                    break;
+                default:
+                    throw new \RuntimeException('incorrect fix or so much levels (max 7)');
+            }
+
+
+            foreach ($level as $node) {
+                if (!isset($node[0])) {
+                    $level = [$level];
+                    var_dump('ok');
+                }
+            }
+        }
+        var_dump($array);
+        return $array;
     }
 
     /**

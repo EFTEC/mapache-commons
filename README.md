@@ -2,10 +2,10 @@
 It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is "raccoon")
 
 [![Packagist](https://img.shields.io/packagist/v/eftec/mapache-commons.svg)](https://packagist.org/packages/eftec/mapache-commons)
-[![Maintenance](https://img.shields.io/maintenance/yes/2024.svg)]()
-[![composer](https://img.shields.io/badge/composer-%3E1.6-blue.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2025.svg)]()
+[![composer](https://img.shields.io/badge/composer-%3E2.0-blue.svg)]()
 [![php](https://img.shields.io/badge/php-7.4-green.svg)]()
-[![php](https://img.shields.io/badge/php-8.*-green.svg)]()
+[![php](https://img.shields.io/badge/php-8.4-green.svg)]()
 [![CocoaPods](https://img.shields.io/badge/docs-70%25-yellow.svg)]()
 
 <!-- TOC -->
@@ -648,6 +648,8 @@ This function works in Linux and Windows (and most probably in other UNIX OS)
 * **$fullPath** The path to analize. (string)
 
 ## Version list
+* 1.25
+  * update 
 * 1.24 
   * Fixed an exception with FileLib. It also stores every error in a field.
   * Completed README.md

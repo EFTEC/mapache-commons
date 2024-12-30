@@ -6,9 +6,37 @@ use PHPUnit\Framework\TestCase;
 
 class CollectionTest extends TestCase
 {
+    public function testXML3(): void
+    {
+        $string='<?xml version="1.0" encoding="UTF-8" ?>
+    <root>
+        <item arg="1">
+            <child><subchild>aa</subchild></child>            
+        </item>       
+    </root>';
+        $xml=CollectionLib::stringToXML($string);
+        $array=CollectionLib::xmlToArray($xml);
+        $xmlBack=CollectionLib::arrayToXML($array,'root');
+        $stringBack=CollectionLib::xmlToString($xmlBack,false);
+        $this->assertInstanceOf('SimpleXMLElement',$xml);
+        //manualfix
+        /*$array=CollectionLib::fixXMLArray($array,['item','item/child']);
+        $this->assertEquals(['item'=> ['@attributes'=>['arg'=>"1"],'child'=>'a']],$array);
+        $this->assertInstanceOf('SimpleXMLElement',$xmlBack);
+        $this->assertEquals('<?xml version="1.0"?>'."\n".'<root><item arg="1"><child>a</child></item></root>'."\n",$stringBack);
+        */
+    }
     public function testXML(): void
     {
-        $string='<?xml version="1.0" encoding="UTF-8" ?><root><item arg="1"><child>a</child></item><item arg="2"><child>b</child></item></root>';
+        $string='<?xml version="1.0" encoding="UTF-8" ?>
+    <root>
+        <item arg="1">
+            <child>a</child>
+        </item>
+        <item arg="2">
+            <child>b</child>
+        </item>
+    </root>';
         $xml=CollectionLib::stringToXML($string);
         $array=CollectionLib::xmlToArray($xml);
         $xmlBack=CollectionLib::arrayToXML($array,'root');
