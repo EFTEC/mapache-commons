@@ -9,7 +9,7 @@ use Throwable;
  * This class has a collection of functions to interact with files and directories.
  *
  * @package   mapache_commons
- * @version   1.24 2024-08-24
+ * @version   1.25 2025-10-07
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -31,6 +31,40 @@ class FileLib
     {
         $result = [];
         return self::_getDirFiles($dir, $result, $extensions, $recursive);
+    }
+
+    /**
+     * It gets the timestamp of one or many files
+     * @param string|array $files
+     * @param string       $type =['m','c','a'][$i]
+     * @param bool         $fileAsIndex (default false), if true then it returns an associative array
+     * @return array
+     */
+    public static function getTimeStampFiles($files,string $type='m',bool $fileAsIndex=false):array {
+        if(!is_array($files)) {
+            $files = [$files];
+        }
+        $result = [];
+        if($fileAsIndex) {
+            foreach ($files as $file) {
+                if (($type === 'c')) {
+                    $result[$file] = @filectime($file);
+                } else {
+                    $result[$file] = $type === 'm' ? @filemtime($file) :
+                        (@fileatime($file));
+                }
+            }
+        } else {
+            foreach ($files as $numFile => $file) {
+                if (($type === 'c')) {
+                    $result[$numFile] = @filectime($file);
+                } else {
+                    $result[$numFile] = $type === 'm' ? @filemtime($file) :
+                        (@fileatime($file));
+                }
+            }
+        }
+        return $result;
     }
 
     /**

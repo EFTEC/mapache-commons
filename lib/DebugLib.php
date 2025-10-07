@@ -1,4 +1,4 @@
-<?php /** @noinspection PhpMissingParamTypeInspection */
+<?php
 /** @noinspection PhpMissingReturnTypeInspection */
 /** @noinspection UnknownInspectionInspection */
 
@@ -16,7 +16,7 @@ use JsonException;
  * Class Debug
  *
  * @package   mapache_commons
- * @version   1.24 2024-08-24
+ * @version   1.25 2025-10-07
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -28,7 +28,7 @@ class DebugLib {
      * ```
      * DebugLib::var_dump($value,true); // returns a var_dump visible via the console of javascript (browser)
      * ```
-     * @param      $value
+     * @param mixed $value
      * @param int  $type : 0=normal (<pre>), 1=javascript console, 2=table (use future)
      * @param bool $returnValue
      *
@@ -37,7 +37,7 @@ class DebugLib {
      * @see          https://stackoverflow.com/questions/10116063/making-php-var-dump-values-display-one-line-per-value
      * @noinspection JSUnnecessarySemicolon
      */
-    public static function var_dump($value, $type = 1, $returnValue = false) {
+    public static function var_dump($value,int $type = 1,bool $returnValue = false) {
         switch ($type) {
             case 1:
                 /** @noinspection JSVoidFunctionReturnValueUsed */

@@ -648,8 +648,8 @@ This function works in Linux and Windows (and most probably in other UNIX OS)
 * **$fullPath** The path to analize. (string)
 
 ## Version list
-* 1.25
-  * update 
+* 1.25 2025-10-07
+  * updated argument types.
 * 1.24 
   * Fixed an exception with FileLib. It also stores every error in a field.
   * Completed README.md

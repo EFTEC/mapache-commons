@@ -1,8 +1,7 @@
-<?php /** @noinspection UnknownInspectionInspection */
+<?php
 /** @noinspection TypeUnsafeComparisonInspection */
 /** @noinspection GrazieInspection */
 /** @noinspection PhpMissingReturnTypeInspection */
-/** @noinspection PhpMissingParamTypeInspection */
 /** @noinspection ReturnTypeCanBeDeclaredInspection */
 
 namespace mapache_commons;
@@ -10,7 +9,7 @@ namespace mapache_commons;
  * Class TextLib
  *
  * @package   mapache_commons
- * @version   1.24 2024-08-24
+ * @version   1.25 2025-10-07
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -25,7 +24,7 @@ class TextLib
      * @return bool true if the text is uppercase, otherwise false
      * @see https://stackoverflow.com/questions/4211875/check-if-a-string-is-all-caps-in-php
      */
-    public static function isUpper($str)
+    public static function isUpper(string $str)
     {
         return strtoupper($str) == $str;
     }
@@ -33,12 +32,12 @@ class TextLib
     /**
      * Returns true if the str is (completelly) lowercase
      *
-     * @param $str
+     * @param string $str
      *
      * @return bool
      * @see https://stackoverflow.com/questions/25340288/php-function-to-check-string-if-is-all-lowercase
      */
-    public static function isLower($str)
+    public static function isLower(string $str)
     {
         return strtolower($str) == $str;
     }
@@ -60,7 +59,8 @@ class TextLib
      *
      * @return bool|string
      */
-    public static function between($haystack, $startNeedle, $endNeedle, &$offset = 0, $ignoreCase = false)
+    public static function between(string $haystack, string $startNeedle, string $endNeedle,
+                                   ?int   &$offset = 0, bool $ignoreCase = false)
     {
         if ($startNeedle === '') {
             $ini = 0;
@@ -95,11 +95,11 @@ class TextLib
      * TextLib::stripQuotes('"hello world"');
      * // returns hello world
      * ```
-     * @param $text
+     * @param string $text
      *
      * @return bool|string
      */
-    public static function stripQuotes($text)
+    public static function stripQuotes(string $text)
     {
         return self::removeParenthesis($text, ['"', "'"], ['"', "'"]);
     }
@@ -125,7 +125,7 @@ class TextLib
      *
      * @return bool|string The string processed of false if error.
      */
-    public static function removeParenthesis($txt, $start = '(', $end = ')')
+    public static function removeParenthesis(string $txt, $start = '(', $end = ')')
     {
         if ($txt == "") {
             return $txt;
@@ -163,12 +163,12 @@ class TextLib
      * @return array|false|string|string[]
      */
     public static function replaceBetween(
-        $haystack,
-        $startNeedle,
-        $endNeedle,
-        $replaceText,
-        &$offset = 0,
-        $replaceTag = false
+        string $haystack,
+        string $startNeedle,
+        string $endNeedle,
+        string $replaceText,
+        ?int   &$offset = 0,
+        bool   $replaceTag = false
     )
     {
         $ini = ($startNeedle === '') ? 0 : strpos($haystack, $startNeedle, $offset);
@@ -202,7 +202,7 @@ class TextLib
      *
      * @return bool|string
      */
-    public static function removeFirstChars($str, $length = 1)
+    public static function removeFirstChars(string $str, int $length = 1)
     {
         return substr($str, $length);
     }
@@ -219,7 +219,7 @@ class TextLib
      *
      * @return bool|string
      */
-    public static function removeLastChars($str, $length = 1)
+    public static function removeLastChars(string $str, int $length = 1)
     {
         return substr($str, 0, -$length);
     }
@@ -233,13 +233,13 @@ class TextLib
      * self::getArgument("arg:200",':'); // returns ["arg","200"]
      * ```
      *
-     * @param string $str The input text
-     * @param string $set The separator of operator
-     * @param bool   $trimValue
+     * @param string|null $str The input text
+     * @param string      $set The separator of operator
+     * @param bool        $trimValue
      *
      * @return array it always returns a two-dimensional array. It could return [null,null] or ['arg',null]
      */
-    public static function getArgument($str, $set = '=', $trimValue = true)
+    public static function getArgument(?string $str, string $set = '=', bool $trimValue = true)
     {
         if (empty($str)) {
             return [null, null];
@@ -267,7 +267,7 @@ class TextLib
      *
      * @return int the position of the first non-space
      */
-    public static function strPosNotSpace($str, $offset = 0, $charlist = " \t\n\r\0\x0B")
+    public static function strPosNotSpace(string $str, int $offset = 0, string $charlist = " \t\n\r\0\x0B")
     {
         $txtTmp = substr($str, 0, $offset) . ltrim(substr($str, $offset), $charlist);
         return strlen($str) - strlen($txtTmp) + $offset;
@@ -289,7 +289,7 @@ class TextLib
      *
      * @return bool|int if not found then it returns false
      */
-    public static function strposArray($haystack, $needles, $offset = 0, $last = false)
+    public static function strposArray(string $haystack, $needles, int $offset = 0, bool $last = false)
     {
         $min = strlen($haystack);
         if (is_array($needles)) {
@@ -323,7 +323,7 @@ class TextLib
      *
      * @return array An associative array
      */
-    public static function parseArg($text, $separator = ',')
+    public static function parseArg(string $text, string $separator = ',')
     {
         $tmpToken = '¶|¶';
         $output = [];
@@ -353,7 +353,7 @@ class TextLib
      *
      * @return array An associative array
      */
-    public static function parseArg2($text, $separator = ',')
+    public static function parseArg2(string $text, string $separator = ',')
     {
         $chars = str_split($text);
         $parts = [];
@@ -401,15 +401,15 @@ class TextLib
      *          // returns: ['item' => 'item', 'export' => 'table', 'inport' => 'file']
      * ```
      *
-     * @param string $txt        the input value. Example "somevalue TYPE int LENGHT 30"
-     * @param array  $separators the indicator for each field.<br>
-     *                           first = indicates the first element (optional)<br>
-     *                           opt = indicates the field is optional<br>
-     *                           req = indicates the field is required <br>
+     * @param string|null $txt        the input value. Example "somevalue TYPE int LENGHT 30"
+     * @param array       $separators the indicator for each field.<br>
+     *                                first = indicates the first element (optional)<br>
+     *                                opt = indicates the field is optional<br>
+     *                                req = indicates the field is required <br>
      *
      * @return array|null It returns an associative array or null if the operation fails.
      */
-    public static function naturalArg($txt, $separators)
+    public static function naturalArg(?string $txt, array $separators)
     {
         $keySeparator = array_keys($separators);
         $result = array_flip($keySeparator);
@@ -454,7 +454,7 @@ class TextLib
      *
      * @return string
      */
-    public static function str_replace_ex($search, $replace, $subject, $limit = 99999)
+    public static function str_replace_ex(string $search, string $replace, string $subject, int $limit = PHP_INT_MAX - 1)
     {
         return implode($replace, explode($search, $subject, $limit + 1));
     }
@@ -477,7 +477,7 @@ class TextLib
      *
      * @return bool
      */
-    public static function wildCardComparison($text, $textWithWildcard)
+    public static function wildCardComparison(string $text, ?string $textWithWildcard)
     {
         if (($textWithWildcard === null || $textWithWildcard === '')
             || strpos($textWithWildcard, '*') === false) {
@@ -514,12 +514,12 @@ class TextLib
      * TextLib::endsWidth('hello world','world'); // true
      * ```
      *
-     * @param $string
-     * @param $endString
+     * @param string $string
+     * @param string $endString
      *
      * @return bool
      */
-    public static function endsWith($string, $endString)
+    public static function endsWith(string $string, string $endString)
     {
         $len = strlen($endString);
         if ($len == 0) {
@@ -542,7 +542,8 @@ class TextLib
      *
      * @return string|string[]|null
      */
-    public static function replaceCurlyVariable($string, $values, $notFoundThenKeep = false)
+    public static function replaceCurlyVariable(string $string, array $values
+        , bool $notFoundThenKeep = false)
     {
         if (strpos($string, '{{') === false) {
             return $string;
@@ -575,7 +576,7 @@ class TextLib
      *
      * @return string
      */
-    public static function addParenthesis($txt, $start = '(', $end = ')')
+    public static function addParenthesis(string $txt, $start = '(', $end = ')')
     {
         if (self::hasParenthesis($txt, $start, $end) === false) {
             return $start . $txt . $end;
@@ -597,7 +598,7 @@ class TextLib
      *
      * @return bool
      */
-    public static function hasParenthesis($txt, $start = '(', $end = ')')
+    public static function hasParenthesis(string $txt, $start = '(', $end = ')')
     {
         if ($txt == "") {
             return false;
@@ -626,11 +627,11 @@ class TextLib
      * TextLib::camelCase('HelloWorld'); // return "helloWorld";
      * TextLib::camelCase('hello_world'); // return "helloWorld";
      * ```
-     * @param string $txt input value
+     * @param string|null $txt input value
      *
      * @return string
      */
-    public static function camelCase($txt)
+    public static function camelCase(?string $txt)
     {
         if ($txt === null || $txt === '') {
             return $txt;

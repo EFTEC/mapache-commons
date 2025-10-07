@@ -12,7 +12,7 @@ use SimpleXMLElement;
  * Class CollectionLib
  *
  * @package   mapache_commons
- * @version   1.24 2024-08-24
+ * @version   1.25 2025-10-07
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -48,7 +48,7 @@ class CollectionLib
      * Sometimes the first element is not the index [0], for example ['key1'=>1,0=2] where the first element is 'key1' and not 0.
      * This function always returns the right value.
      *
-     * @param array $array input array
+     * @param array|object $array input array
      *
      * @return mixed
      * @see https://stackoverflow.com/questions/1921421/get-the-first-element-of-an-array
@@ -60,7 +60,7 @@ class CollectionLib
     /**
      * Returns the first key of an array.
      *
-     * @param array $array input array
+     * @param array|object $array input array
      *
      * @return int|string|null
      */
@@ -76,7 +76,7 @@ class CollectionLib
      * @return array
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
      */
-    public static function arrayKeyLower($array): array
+    public static function arrayKeyLower(array $array): array
     {
         return array_map(static function ($item) {
             if (is_array($item)) {
@@ -94,7 +94,7 @@ class CollectionLib
      * @return array
      * @see https://stackoverflow.com/questions/1444484/how-to-convert-all-keys-in-a-multi-dimenional-array-to-snake-case
      */
-    public static function arrayKeyUpper($array): array
+    public static function arrayKeyUpper(array $array): array
     {
         return array_map(static function ($item) {
             if (is_array($item)) {
@@ -113,7 +113,7 @@ class CollectionLib
      * @return string
      * @see https://stackoverflow.com/questions/4746079/how-to-create-a-html-table-from-a-php-array
      */
-    public static function generateTable($array, $css = true): string
+    public static function generateTable(?array $array, $css = true): string
     {
         $first=array_key_first($array);
         if (!isset($array[$first]) && !is_numeric(array_key_first($array))) {
@@ -194,7 +194,7 @@ class CollectionLib
      * CollectionLib::splitOpeningClosing("a(B,C,D)e(F,G,H)i"); // ['a','B,C,D','e','F,G,H','i']
      * ```
      *
-     * @param string $text          input text to separated
+     * @param string|null $text          input text to separated
      * @param string $openingTag    Opening tag, default "("
      * @param string $closingTag    closing tag, default ")"
      * @param int    $startPosition start position (by default it is zero)
@@ -204,12 +204,12 @@ class CollectionLib
      * @return array If errror then it returns an empty array
      */
     public static function splitOpeningClosing(
-        $text,
-        $openingTag = '(',
-        $closingTag = ')',
-        $startPosition = 0,
-        $excludeEmpty = true,
-        $includeTag = false
+        ?string $text,
+        string $openingTag = '(',
+        string $closingTag = ')',
+        int $startPosition = 0,
+        bool $excludeEmpty = true,
+        bool $includeTag = false
     ): array
     {
         if (!$text) {
@@ -266,7 +266,8 @@ class CollectionLib
      *
      * @return array
      */
-    public static function splitNotString($text, $separator, $offset = 0, $excludeEmpty = true): array
+    public static function splitNotString(string $text,string $separator,
+                                          int $offset = 0,bool $excludeEmpty = true): array
     {
         $p0 = $offset;
         $even = false;
@@ -341,7 +342,7 @@ class CollectionLib
      * @return array
      * @see https://www.php.net/manual/en/function.array-change-key-case.php
      */
-    public static function arrayChangeKeyCaseRecursive($array, $case = CASE_LOWER): array
+    public static function arrayChangeKeyCaseRecursive(array $array,int $case = CASE_LOWER): array
     {
         return array_map(static function ($item) {
             if (is_array($item)) {
@@ -369,7 +370,7 @@ class CollectionLib
      *
      * @return int|string|bool|array return false if not found or if error.
      */
-    public static function arraySearchField($array, $fieldName, $value, $returnAll = false) {
+    public static function arraySearchField(array $array, $fieldName, $value,bool $returnAll = false) {
         $first = reset($array);
         $result = [];
         if (is_object($first)) {
@@ -417,7 +418,7 @@ class CollectionLib
      * @param bool             $format if true then the result is formatted.
      * @return string
      */
-    public static function xmlToString(SimpleXMLElement $xml,$format=true): string
+    public static function xmlToString(SimpleXMLElement $xml,bool $format=true): string
     {
         if(!$format) {
             return $xml->asXML();
@@ -427,54 +428,6 @@ class CollectionLib
         $dom->formatOutput = true;
         $dom->loadXML($xml->asXML());
         return $dom->saveXML();
-    }
-
-    /**
-     * It fixes an array obtained of an XML.
-     * @param array $array
-     * @param array $fixes
-     * @return array
-     * todo: pendiente, no funciona todavia
-     */
-    public static function fixXMLArray(array $array,array $fixes):array {
-        foreach($fixes as $fix) {
-            $part=explode("/",$fix);
-            switch (count($part)) {
-                case 1:
-                    $level =& $array[$part[0]];
-                    break;
-                case 2:
-                    $level =& $array[$part[0]][$part[1]];
-                    break;
-                case 3:
-                    $level =& $array[$part[0]][$part[1]][$part[2]];
-                    break;
-                case 4:
-                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]];
-                    break;
-                case 5:
-                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]][$part[4]];
-                    break;
-                case 6:
-                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]][$part[4]][$part[5]];
-                    break;
-                case 7:
-                    $level =& $array[$part[0]][$part[1]][$part[2]][$part[3]][$part[4]][$part[5]][$part[6]];
-                    break;
-                default:
-                    throw new \RuntimeException('incorrect fix or so much levels (max 7)');
-            }
-
-
-            foreach ($level as $node) {
-                if (!isset($node[0])) {
-                    $level = [$level];
-                    var_dump('ok');
-                }
-            }
-        }
-        var_dump($array);
-        return $array;
     }
 
     /**
@@ -488,7 +441,8 @@ class CollectionLib
      * @param string $insidetag It is used to fix a specific condition with the xml generated by PHP.
      * @return SimpleXMLElement
      */
-    public static function arrayToXML(array $data,string $rootName='root',$insidetag='value_inside'): SimpleXMLElement
+    public static function arrayToXML(array $data,string $rootName='root',
+                                      string $insidetag='value_inside'): SimpleXMLElement
     {
         $xml=new SimpleXMLElement("<$rootName/>");
         $null2=new SimpleXMLElement("<null2/>");
@@ -508,7 +462,8 @@ class CollectionLib
      * @return void
      */
     protected static function arrayToXMLInt(SimpleXMLElement $object, array $data,
-                                            ?SimpleXMLElement $parent, $parentKey, $init=true,$insidetag='_value'): void
+                                            ?SimpleXMLElement $parent,string $parentKey,
+                                            bool $init=true,string $insidetag='_value'): void
     {
         foreach ($data as $key => $value) {
             if (is_array($value)) {
@@ -568,7 +523,8 @@ class CollectionLib
      *                          a new tag <tag a='1'><_value>2</_value></tag>
      * @return false|SimpleXMLElement $1|false|SimpleXMLElement
      */
-    public static function stringToXML(string $string,$className=null,int $options=0,$insidetag='_value') {
+    public static function stringToXML(string $string,$className=null,
+                                       int $options=0,string $insidetag='_value') {
         /** @noinspection NotOptimalRegularExpressionsInspection */
         $str = preg_replace('/<([^ ]+) ([^>]*)>([^<>]*)<\/\\1>/i', '<$1 $2><'.$insidetag.'>$3</'.$insidetag.'></$1>', $string);
         return simplexml_load_string($str,$className,$options);
