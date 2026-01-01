@@ -16,7 +16,7 @@ use JsonException;
  * Class Debug
  *
  * @package   mapache_commons
- * @version   1.25 2025-10-07
+ * @version   1.26 2026-01-01
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons

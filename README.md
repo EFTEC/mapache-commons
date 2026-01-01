@@ -2,7 +2,7 @@
 It's a set of useful functions for PHP. The name is a pun (Mapache in spanish is "raccoon")
 
 [![Packagist](https://img.shields.io/packagist/v/eftec/mapache-commons.svg)](https://packagist.org/packages/eftec/mapache-commons)
-[![Maintenance](https://img.shields.io/maintenance/yes/2025.svg)]()
+[![Maintenance](https://img.shields.io/maintenance/yes/2026.svg)]()
 [![composer](https://img.shields.io/badge/composer-%3E2.0-blue.svg)]()
 [![php](https://img.shields.io/badge/php-7.4-green.svg)]()
 [![php](https://img.shields.io/badge/php-8.4-green.svg)]()
@@ -648,6 +648,8 @@ This function works in Linux and Windows (and most probably in other UNIX OS)
 * **$fullPath** The path to analize. (string)
 
 ## Version list
+* 1.26 2026-01-01
+  * updated WebLib 
 * 1.25 2025-10-07
   * updated argument types.
 * 1.24 

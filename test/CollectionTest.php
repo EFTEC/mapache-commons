@@ -57,6 +57,10 @@ class CollectionTest extends TestCase
         $this->assertEquals(['PRODUCT'=>'cocacola','PRICE'=>333,'QUANTITY'=>22],CollectionLib::arrayKeyUpper($array));
         $this->assertStringContainsString('<th>Product</th>',CollectionLib::generateTable($array));
     }
+    public function testMultipleSplit():void {
+
+        $this->assertEquals(['first line','second line','third line','fourth line'],CollectionLib::multiExplode(["abc","123"],"first lineabcsecond line123third lineabcfourth line"));
+    }
     public function testXML2(): void
     {
         $string='<?xml version="1.0" encoding="UTF-8" ?>

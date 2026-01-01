@@ -12,7 +12,7 @@ use SimpleXMLElement;
  * Class CollectionLib
  *
  * @package   mapache_commons
- * @version   1.25 2025-10-07
+ * @version   1.26 2026-01-01
  * @copyright Jorge Castro Castillo
  * @license   Apache-2.0
  * @see       https://github.com/EFTEC/mapache-commons
@@ -545,4 +545,18 @@ class CollectionLib
         return json_decode(json_encode($xml, JSON_THROW_ON_ERROR), TRUE, 512, JSON_THROW_ON_ERROR);
     }
 
+    /**
+     * It explode a string using multiples delimiters.
+     * **Example:**
+     * ```
+     * $array=CollectionLib::multiExplode(["alpha","beta"],"1234alpha4567beta7890alpha1234");
+     * ```
+     * @param array  $delimiters
+     * @param string $string
+     * @return array|null
+     */
+    public static function multiExplode(array $delimiters,string $string):?array {
+        $first=array_shift($delimiters);
+        return explode($first,str_replace($delimiters,$first,$string));
+    }
 }
